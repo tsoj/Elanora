@@ -1,7 +1,7 @@
 """Export the bold a for hand editing, for both approaches:
 
-    manual/a-bold-brygada.ufo    Brygada's own bold a (current Perla)
-    manual/a-bold-transfer.ufo   Perla Regular a + Lora's Regular->Bold movement
+    manual/a-bold-brygada.ufo    Brygada's own bold a (current Elanor)
+    manual/a-bold-transfer.ufo   Elanor Regular a + Lora's Regular->Bold movement
 
 Edit glyph 'a' in either file (move points only), then choose the approach with BOLD_A_MODE in
 build_font.py (or PERLA_BOLD_A=transfer) and rebuild. Existing files are not overwritten unless

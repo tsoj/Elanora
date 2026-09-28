@@ -45,8 +45,9 @@ def slant_terminals(M, name, edges, drops=(), balance=True):
             hmtx[name] = (old_adv, glyf[name].xMin)
 
 
-def stretch_top(M, name, y0, new_top, xmax=None):
-    """Stretch everything above y0 so the glyph's top reaches new_top (t's ascender)."""
+def stretch_top(M, name, y0, new_top, xmax=None, shear=0.0):
+    """Stretch everything above y0 so the glyph's top reaches new_top (t's ascender).
+    shear (= tan of the italic angle) moves points along the slant, so slanted stems stay straight."""
     for w, f in M.items():
         glyf = f["glyf"]
         cs = glyph_contours(glyf, name)
@@ -56,7 +57,9 @@ def stretch_top(M, name, y0, new_top, xmax=None):
         for c in cs:
             for p in c:
                 if p[1] > y0 and (xmax is None or p[0] <= xmax[w]):
-                    p[1] = y0 + (p[1] - y0) * k
+                    ny = y0 + (p[1] - y0) * k
+                    p[0] += (ny - p[1]) * shear
+                    p[1] = ny
         set_glyph_contours(glyf, name, cs)
         f["hmtx"][name] = (f["hmtx"][name][0], glyf[name].xMin)
 
@@ -117,7 +120,7 @@ def bracket_feet(M, names, size_v=40, size_h=26, zone=120, ref_height=700):
 
 
 def q_with_brygada_tail(M, bry_path, weights, cap_scale):
-    """Perla's Q = Perla's O + Brygada's calligraphic tail, fitted to the O."""
+    """Elanor's Q = Elanor's O + Brygada's calligraphic tail, fitted to the O."""
     for w, f in M.items():
         glyf, hmtx = f["glyf"], f["hmtx"]
         B = bry_instance(bry_path, weights[w])
@@ -328,7 +331,7 @@ def _nearest_on(c, P):
 
 def italic_y_from_u_g(M, y_cut=240, u_crotch=(397, 216), g_crotch=(358, 215)):
     """Brygada-shaped italic y in Lora's hand: Lora's italic u (entry stroke, bowl, right stem)
-    with the descender and ball of Perla's italic g grafted onto the right stem."""
+    with the descender and ball of Elanor's italic g grafted onto the right stem."""
     from .transplant import base_anchors
     first = next(iter(M))
     idx = {}
@@ -528,7 +531,7 @@ def graft_lora_feet(M, M_lora, style="roman", donors=FOOT_DONORS):
     return report
 
 
-# whole-arm joins, calibrated on Brygada (offsets at Perla's scale, Regular): (inner, outer)
+# whole-arm joins, calibrated on Brygada (offsets at Elanor's scale, Regular): (inner, outer)
 ARM_OFFSETS = {"top_n": (60, 10), "bot_u": (60, 45), "top_b": (70, 15), "bot_b": (45, 8),
                "top_d": (70, 15), "bot_d": (50, 25)}
 ARMS = {
@@ -1410,3 +1413,33 @@ def arch_morph(M, bry, weights, scale, factor=1.0, glyphs=None, reach=1.0, thick
             set_glyph_contours(glyf, name, cs)
             f["hmtx"][name] = (f["hmtx"][name][0], glyf[name].xMin)
     return report
+
+
+def remove_gsub_feature(font, tag):
+    """Remove every feature record with this tag from GSUB, including its references in all
+    script/language systems (remaining feature indices are renumbered). The lookups it used
+    stay in the LookupList, unreferenced, so lookup indices elsewhere do not change.
+    Returns the number of feature records removed."""
+    gsub = font["GSUB"].table
+    fl = gsub.FeatureList
+    drop = {i for i, fr in enumerate(fl.FeatureRecord) if fr.FeatureTag == tag}
+    if not drop:
+        return 0
+    keep = [i for i in range(len(fl.FeatureRecord)) if i not in drop]
+    remap = {old: new for new, old in enumerate(keep)}
+    fl.FeatureRecord = [fl.FeatureRecord[i] for i in keep]
+    fl.FeatureCount = len(fl.FeatureRecord)
+
+    def fix(ls):
+        ls.FeatureIndex = [remap[i] for i in ls.FeatureIndex if i in remap]
+        ls.FeatureCount = len(ls.FeatureIndex)
+        if ls.ReqFeatureIndex in drop:
+            ls.ReqFeatureIndex = 0xFFFF
+        elif ls.ReqFeatureIndex != 0xFFFF:
+            ls.ReqFeatureIndex = remap[ls.ReqFeatureIndex]
+    for sr in gsub.ScriptList.ScriptRecord:
+        if sr.Script.DefaultLangSys is not None:
+            fix(sr.Script.DefaultLangSys)
+        for lr in sr.Script.LangSysRecord:
+            fix(lr.LangSys)
+    return len(drop)

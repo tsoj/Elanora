@@ -1,4 +1,4 @@
-# Perla
+# Elanor
 
 A text serif derived from **Lora** and **Brygada 1918**.
 
@@ -9,21 +9,21 @@ carry most of what you liked, including its clarity on screens. Brygada's traits
 | Trait (from Brygada) | How it was applied |
 | --- | --- |
 | Ball / teardrop terminals | Brygada's own paths. The terminals of c, f, ſ, j, r, y, J, є, э and the tail of ŋ are cut out of Brygada and spliced onto Lora's strokes (`fontmix/splice.py`, `fontmix/splice_jobs.py`); the joint is blended so the stroke tapers smoothly. The r's ball is shrunk 14% and its spacing restored. The italic keeps Lora's own terminals. g, ǥ, fi, fl, з, ƒ keep Lora's teardrops. |
-| Bold | The bold master of Brygada-derived glyphs is Perla Regular + Lora's own Regular→Bold movement (`fontmix/boldxfer.py`): spliced sections are matched along the Lora path they replaced (stem stretches keep the stem's movement), replaced counters around their loop, whole-copied glyphs (S, z, Z, Q) by nearest point. f and a keep Brygada's own bold (the bold a, æ and ª hand-adjusted, `manual/a-bold-brygada.ufo`); s is a lighter Brygada thickened evenly. Bold figures: the regular figure (overlaps merged) with every outline edge offset by Lora's own Regular→Bold growth for a stroke of that width (hairlines +32, stems +52 units; `contrast_figure` in `fontmix/figures.py`), so both weights stay point-compatible. |
+| Bold | The bold master of Brygada-derived glyphs is Elanor Regular + Lora's own Regular→Bold movement (`fontmix/boldxfer.py`): spliced sections are matched along the Lora path they replaced (stem stretches keep the stem's movement), replaced counters around their loop, whole-copied glyphs (S, z, Z, Q) by nearest point. f and a keep Brygada's own bold (the bold a, æ and ª hand-adjusted, `manual/a-bold-brygada.ufo`); s is a lighter Brygada thickened evenly. Bold figures: the regular figure (overlaps merged) with every outline edge offset by Lora's own Regular→Bold growth for a stroke of that width (hairlines +32, stems +52 units; `contrast_figure` in `fontmix/figures.py`), so both weights stay point-compatible. |
 | Arches and bowls | Lora's own, unchanged (n h m u b d p q and relatives are identical to Lora in every weight). Brygada-style arches are retired for now; the code is kept (`VARIANTS` in `build_font.py`: `main` = smooth morph of Lora's arches to Brygada's joins, `literal` = spliced Brygada paths). |
-| Brygada letters | The Q's tail (laid onto Perla's O), Brygada's Z/z terminal serifs, a taller t, and Brygada's s, S, a/æ/ª, z, Z (copied, scaled to Perla's metrics; accents re-anchored). |
+| Brygada letters | The Q's tail (laid onto Elanor's O), Brygada's Z/z terminal serifs, a taller t (roman and italic, 85% of the way from Lora's t to Brygada's, relative to the ascender), and Brygada's s, S, a/æ/ª, z, Z (copied, scaled to Elanor's metrics; accents re-anchored). |
 | Italic y | Brygada's u-shaped italic y: Lora's italic u (right arm straightened) with the tail of Lora's g. |
 | Figures | Brygada's lining, tabular and oldstyle figures, numerators/denominators, superiors/inferiors and fraction bar, scaled to Lora's figure height, weight-matched per master by interpolating Brygada's weight axis, and (italic) re-slanted from 8° to Lora's 3°. Figure kerning is re-derived for the new shapes. The 1 and 4 stand on Lora's own foot (long flared bracket left, near-square right, shorter slab). |
 
 ## Files
 
-- `dist/fonts/variable/`: `Perla[wght].ttf`, `Perla-Italic[wght].ttf` (weight 400–700)
+- `dist/fonts/variable/`: `Elanor[wght].ttf`, `Elanor-Italic[wght].ttf` (weight 400–700)
 - `dist/fonts/ttf/`: static Regular, Medium, SemiBold, Bold and their italics (overlaps removed, ttfautohinted)
 - `dist/fonts/webfonts/`: WOFF2 versions of all of the above
 - `dist/specimen.html`: the specimen page
 - `dist/OFL.txt`: license
 
-OpenType features: `liga` `kern` `onum` `lnum` `tnum` `pnum` `frac` `numr` `dnom` `sups` `subs` `sinf`
+OpenType features: `liga` (italic only: fi, fl; the roman has no ligatures, its f keeps the ball terminal) `kern` `onum` `lnum` `tnum` `pnum` `frac` `numr` `dnom` `sups` `subs` `sinf`
 plus everything Lora already had (`case`, `locl`, `ordn`, …).
 
 ## Rebuild
@@ -48,8 +48,8 @@ keeps the two masters point-compatible, so the result is again a true variable f
 The bold a (and with it æ, ª and all accented a's) can be edited by hand in any font editor
 that opens UFO files (FontForge, Fontra, Glyphs, RoboFont, …).
 
-- `manual/a-bold-brygada.ufo`: Brygada's own bold a, as Perla has it now
-- `manual/a-bold-transfer.ufo`: Perla Regular a + Lora's Regular→Bold movement (the approach used for most letters)
+- `manual/a-bold-brygada.ufo`: Brygada's own bold a, as Elanor has it now
+- `manual/a-bold-transfer.ufo`: Elanor Regular a + Lora's Regular→Bold movement (the approach used for most letters)
 
 Edit glyph `a` (the regular a is in its background layer; `a.regular`, `a.lora-bold`,
 `a.brygada-bold`, `ae`, `ordfeminine` are references and are not read back). **Move points and

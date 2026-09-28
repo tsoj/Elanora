@@ -42,7 +42,7 @@ def main():
             f.flavor = "woff2"
             f.save(f"{DIST}/fonts/webfonts/{FAMILY}-{sn}.woff2")
             print("wrote", path)
-    # variants (installable next to Perla under their own family names)
+    # variants (installable next to Elanor under their own family names)
     os.makedirs(f"{DIST}/fonts/versions", exist_ok=True)
     for vf_path in sorted(glob.glob("out/Roman-VF-*.ttf") + glob.glob("out/Italic-VF-*.ttf")):
         italic = "Italic" in vf_path

@@ -1,6 +1,6 @@
 """Family naming / metadata for the derived font."""
-FAMILY = "Perla"
-PS_FAMILY = "Perla"
+FAMILY = "Elanor"
+PS_FAMILY = "Elanor"
 VERSION = "1.000"
 YEAR = 2026
 

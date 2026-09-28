@@ -32,11 +32,11 @@ FIG_WEIGHTS = {"roman": {400: 400, 700: 400}, "italic": {400: 400, 700: 400}}  #
 FIG_EMB = {700: 17}
 ARCH_GLYPHS = ["n", "h", "m", "u", "b", "p", "d", "q", "hbar", "thorn", "dcroat", "dcaron"]
 ARCH_FACTOR = 1.0  # main: how far Lora's arches move toward Brygada's join heights
-# first entry = the Perla build; further entries are extra variants (dist/fonts/versions).
-# Arch changes are retired (2026-09-28): Perla keeps Lora's arches and bowls as they are
+# first entry = the Elanor build; further entries are extra variants (dist/fonts/versions).
+# Arch changes are retired (2026-09-28): Elanor keeps Lora's arches and bowls as they are
 # ("classic"); "main" (smooth arch morph) and "literal" (spliced Brygada arches) remain available.
 VARIANTS = {"roman": ["classic"], "italic": ["main"]}
-# bold a (and æ, ª): "brygada" = Brygada's own bold; "transfer" = Perla Regular + Lora's
+# bold a (and æ, ª): "brygada" = Brygada's own bold; "transfer" = Elanor Regular + Lora's
 # Regular->Bold movement, like most other letters. A hand-edited version of the chosen one is
 # read from manual/a-bold-<mode>.ufo when that file exists (see tools/export_bold_a.py).
 BOLD_A_MODE = os.environ.get("PERLA_BOLD_A", "brygada")
@@ -170,6 +170,8 @@ def build(style, log=None, variant="main", out=None):
         from fontmix.splice_jobs import run_jobs, ITALIC_JOBS, IT_SHEAR
         reanchor(M, "y", italic_y_from_u_g(M))
         straighten_y_arm(M)
+        from fontmix.letters import italic_tall_t
+        italic_tall_t(M)
         if variant == "balls":
             run_jobs(M, BRYG[style], {400: 400, 700: 640}, 500 / 460, ITALIC_JOBS, shear=IT_SHEAR, log=log)
             from fontmix.transplant import transplant, match_weight
@@ -197,6 +199,11 @@ def build(style, log=None, variant="main", out=None):
         log.append(("kern-sample", {w: {a+'/'+b_: d for (a, b_), d in list(v.items())[:12]} for w, v in kern_log.items()}))
     vf = build_vf(M, TTFont(src))
     add_numeric_features(vf)
+    if style == "roman":
+        # no fi / fl ligatures in the roman (the italic keeps Lora's): the roman f has a ball
+        # terminal. The encoded characters U+FB01 / U+FB02 stay in the font.
+        from fontmix.tweaks import remove_gsub_feature
+        remove_gsub_feature(vf, "liga")
     out = out or OUT[style]
     vf.save(out)
     return out
