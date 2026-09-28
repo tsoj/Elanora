@@ -1,8 +1,14 @@
-"""Fill the specimen template with the current web fonts (base64) -> specimen HTML."""
+"""Fill the specimen template with the current web fonts (base64) -> specimen HTML.
+
+    uv run python tools/make_specimen.py [specimen-dir]     (default: specimen)
+
+specimen/template.html and the Lora / Brygada reference fonts (lora-*.woff2, bryg-*.woff2) are
+the inputs; the Elanor fonts are copied from dist/. Writes specimen/elanor-specimen.html and
+dist/specimen.html."""
 import base64, shutil, sys
 from pathlib import Path
 
-spec = Path(sys.argv[1])  # directory holding template.html and the reference woff2 files
+spec = Path(sys.argv[1] if len(sys.argv) > 1 else "specimen")  # holds template.html and the reference woff2 files
 fonts = {
     "elanor-r": "dist/fonts/webfonts/Elanor[wght].woff2",
     "elanor-i": "dist/fonts/webfonts/Elanor-Italic[wght].woff2",

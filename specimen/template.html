@@ -1,0 +1,394 @@
+<title>Elanor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+@font-face{font-family:"Elanor";src:url(data:font/woff2;base64,{{elanor-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
+@font-face{font-family:"Elanor";src:url(data:font/woff2;base64,{{elanor-i}}) format("woff2");font-weight:400 700;font-style:italic;font-display:block}
+@font-face{font-family:"LoraRef";src:url(data:font/woff2;base64,{{lora-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
+@font-face{font-family:"LoraRef";src:url(data:font/woff2;base64,{{lora-i}}) format("woff2");font-weight:400 700;font-style:italic;font-display:block}
+@font-face{font-family:"BrygadaRef";src:url(data:font/woff2;base64,{{bryg-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
+@font-face{font-family:"BrygadaRef";src:url(data:font/woff2;base64,{{bryg-i}}) format("woff2");font-weight:400 700;font-style:italic;font-display:block}
+
+:root{
+  --paper:#F5F6F7; --panel:#FFFFFF; --ink:#15171C; --muted:#5E6470; --faint:#8A909B;
+  --rule:#D9DCE1; --accent:#2F3E9E; --accent-soft:#E4E7F6;
+  --elanor:#B9C0DE; --lora:#D0343A; --bryg:#0F8585;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:"Elanor",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#111317; --panel:#171A1F; --ink:#E8E9ED; --muted:#9BA1AD; --faint:#6F7580;
+    --rule:#2A2E36; --accent:#A3ADF4; --accent-soft:#1E2342;
+    --elanor:#3B4266; --lora:#FF6B6F; --bryg:#3CC7C0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111317; --panel:#171A1F; --ink:#E8E9ED; --muted:#9BA1AD; --faint:#6F7580;
+  --rule:#2A2E36; --accent:#A3ADF4; --accent-soft:#1E2342;
+  --elanor:#3B4266; --lora:#FF6B6F; --bryg:#3CC7C0; color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.55;
+  padding-inline:clamp(16px,4vw,48px);padding-block:0 64px;font-kerning:normal}
+.wrap{max-width:1080px;margin-inline:auto;display:flex;flex-direction:column;gap:64px}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h2{font-weight:600;font-size:clamp(26px,3.4vw,34px);line-height:1.15;margin:0;text-wrap:balance}
+h3{font-weight:600;font-size:21px;line-height:1.2;margin:0;text-wrap:balance}
+p{margin:0}
+.lede{max-width:62ch;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:22px}
+.sechead{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--rule);padding-top:22px}
+
+/* header */
+header{padding-top:52px;display:grid;gap:20px}
+header h1{font-size:clamp(84px,17vw,200px);line-height:.86;font-weight:500;letter-spacing:-.015em;margin:0}
+header .sub{font-size:clamp(19px,2.2vw,23px);max-width:44ch;line-height:1.4}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px}
+.meta span{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:var(--panel)}
+.seg button{font:inherit;font-family:var(--mono);font-size:12px;background:none;border:0;color:var(--muted);padding:5px 11px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent)}
+.seg button:focus-visible,.toggle:has(input:focus-visible),input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted);cursor:pointer;user-select:none;
+  border:1px solid var(--rule);border-radius:3px;padding:4px 10px;background:var(--panel)}
+.toggle input{position:absolute;opacity:0;pointer-events:none}
+.toggle:has(input:checked){color:var(--ink)}
+.toggle:has(input:not(:checked)) .key{opacity:.25}
+.key{display:inline-block;width:22px;height:0;border-top:2px solid}
+.key.elanor{border-top:9px solid var(--elanor);border-radius:1px}
+.key.lora{border-color:var(--lora)}
+.key.bryg{border-color:var(--bryg);border-top-style:dashed}
+
+/* overlays */
+.groups{display:flex;flex-direction:column;gap:34px}
+.group{display:grid;gap:12px}
+.group .why{max-width:66ch;color:var(--muted);font-size:16.5px}
+.group .why strong{color:var(--ink);font-weight:600}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.cell{background:var(--panel);border:1px solid var(--rule);border-radius:6px;display:flex;flex-direction:column}
+.cell svg{display:block;width:100%;height:auto}
+.cell .cap{font-family:var(--mono);font-size:11px;color:var(--faint);padding:0 10px 8px;letter-spacing:.04em}
+.cell text{font-size:150px}
+.cell .t-elanor{fill:var(--elanor)}
+.cell .t-lora{fill:none;stroke:var(--lora);stroke-width:1.6px}
+.cell .t-bryg{fill:none;stroke:var(--bryg);stroke-width:1.6px;stroke-dasharray:5 4}
+.cell .base{stroke:var(--rule);stroke-width:1px}
+.hide-lora .t-lora,.hide-bryg .t-bryg,.hide-elanor .t-elanor{display:none}
+
+/* tester */
+.tester{background:var(--panel);border:1px solid var(--rule);border-radius:6px;display:flex;flex-direction:column}
+.tester .controls{padding:14px 18px;border-bottom:1px solid var(--rule)}
+.ctl{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.ctl output{color:var(--ink);min-width:3.2ch;font-variant-numeric:tabular-nums}
+.ctl input[type=range]{width:130px;accent-color:var(--accent)}
+#sample{padding:22px 20px 26px;outline:none;font-size:44px;line-height:1.25;overflow-wrap:anywhere;min-height:3em}
+
+/* text */
+.text{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:34px}
+.text article{display:flex;flex-direction:column;gap:10px}
+.text p{font-size:17px;line-height:1.6;hyphens:auto}
+
+/* side by side */
+.sbs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px}
+.sbs article{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px 18px 20px;display:flex;flex-direction:column;gap:10px}
+.sbs article.cur{border-color:var(--accent)}
+.sbs .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.sbs article.cur .who{color:var(--accent)}
+.sbs p{line-height:1.6;hyphens:auto}
+.sbs p + p{margin-top:.6em}
+.f-lora{font-family:"LoraRef",Georgia,serif}
+.f-bryg{font-family:"BrygadaRef",Georgia,serif}
+
+.tag{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:3px;white-space:nowrap}
+
+/* ligatures */
+.ligs{display:flex;flex-direction:column;border:1px solid var(--rule);border-radius:6px;background:var(--panel);overflow-x:auto}
+.ligrow{display:grid;grid-template-columns:96px repeat(3,minmax(0,1fr));gap:12px;align-items:center;padding:8px 16px;border-top:1px solid var(--rule);min-width:520px}
+.ligrow:first-child{border-top:0}
+.ligrow.head{padding-block:8px}
+.ligrow .k,.ligrow .m{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--faint)}
+.ligrow.head .k,.ligrow.head .m{text-transform:uppercase}
+.ligrow .k{text-transform:none;color:var(--muted);font-size:13px;letter-spacing:.02em}
+.ligrow .g{font-size:clamp(40px,7vw,72px);line-height:1.15;white-space:nowrap}
+.ligrow .g.on{color:var(--accent)}
+.ligrow.sub{background:var(--accent-soft)}
+.ligsec{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 16px 6px;border-top:1px solid var(--rule)}
+.ligpanels p{font-size:clamp(19px,2.4vw,23px);line-height:1.55}
+.ligpanels .ft{font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.04em}
+.others{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:8px 18px;align-items:baseline;font-size:15.5px;color:var(--muted)}
+.others dt{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--accent-soft);padding:1px 7px;border-radius:3px;width:max-content;max-width:100%}
+.others dd{margin:0}
+@media (max-width:560px){.others{grid-template-columns:minmax(0,1fr)}.others dd{margin-bottom:6px}}
+
+footer{border-top:1px solid var(--rule);padding-top:22px;display:flex;flex-direction:column;gap:10px;color:var(--muted);font-size:15.5px}
+footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:var(--accent-soft);padding:1px 5px;border-radius:3px}
+@media (max-width:560px){
+  #sample{font-size:32px}
+  .cells{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="label">A text serif · Lora × Brygada 1918</span>
+    <h1>Elanor</h1>
+    <p class="sub">Lora with Brygada 1918’s ball terminals, a handful of its letters, and its figures.</p>
+    <div class="meta">
+      <span>roman &amp; italic</span>
+      <span>wght <b>400–700</b> variable</span>
+      <span><b>8</b> static instances</span>
+      <span><b>948</b> glyphs</span>
+      <span>Latin · Cyrillic</span>
+      <span>SIL OFL 1.1</span>
+    </div>
+  </header>
+
+  <section aria-labelledby="changes">
+    <div class="sechead">
+      <span class="label">What changed</span>
+      <h2 id="changes">Elanor over Lora and Brygada</h2>
+      <p class="lede">Every letter not shown here is Lora’s. Brygada is drawn at Lora’s x-height (scaled 500/460).</p>
+    </div>
+    <div class="controls" id="cmp-controls">
+      <div class="seg" role="group" aria-label="Weight">
+        <button type="button" data-w="400" aria-pressed="true">Regular</button>
+        <button type="button" data-w="700" aria-pressed="false">Bold</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="show-elanor" checked><span class="key elanor"></span>Elanor</label>
+      <label class="toggle"><input type="checkbox" id="show-lora" checked><span class="key lora"></span>Lora</label>
+      <label class="toggle"><input type="checkbox" id="show-bryg"><span class="key bryg"></span>Brygada</label>
+    </div>
+    <div class="groups hide-bryg" id="groups"></div>
+  </section>
+
+  <section aria-labelledby="sbs-h">
+    <div class="sechead">
+      <span class="label">Side by side</span>
+      <h2 id="sbs-h">The same paragraph in all three</h2>
+      <p class="lede">Set at equal x-height, so the differences are in the letters and not the size.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Style">
+        <button type="button" data-sbs="r" aria-pressed="true">Regular</button>
+        <button type="button" data-sbs="i" aria-pressed="false">Italic</button>
+        <button type="button" data-sbs="b" aria-pressed="false">Bold</button>
+      </div>
+      <div class="seg" role="group" aria-label="Text size">
+        <button type="button" data-sz="16" aria-pressed="false">16px</button>
+        <button type="button" data-sz="19" aria-pressed="true">19px</button>
+        <button type="button" data-sz="24" aria-pressed="false">24px</button>
+      </div>
+    </div>
+    <div class="sbs" id="sbs">
+      <article class="cur"><span class="who">Elanor</span><div class="body" data-face=""></div></article>
+      <article><span class="who">Lora</span><div class="body f-lora" data-face="lora"></div></article>
+      <article><span class="who">Brygada 1918</span><div class="body f-bryg" data-face="bryg"></div></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="lig-h">
+    <div class="sechead">
+      <span class="label">Ligatures</span>
+      <h2 id="lig-h">Ligatures in the italic only</h2>
+      <p class="lede">The italic has two ligatures, fi and fl, in the standard <span class="tag">liga</span> feature, which browsers and most apps switch on by default. The roman has none: its f keeps the ball terminal and simply stands next to the i or l.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Weight">
+        <button type="button" data-lig="r" aria-pressed="true">Regular</button>
+        <button type="button" data-lig="b" aria-pressed="false">Bold</button>
+      </div>
+    </div>
+    <div class="ligs">
+      <div class="ligrow head"><span class="k">Typed</span><span class="m">Roman</span><span class="m">Italic, liga off</span><span class="m">Italic, liga on</span></div>
+      <div class="ligrow"><span class="k">f&nbsp;i</span><span class="g lr" data-liga="1" data-it="0">fi</span><span class="g lr" data-liga="0" data-it="1">fi</span><span class="g on lr" data-liga="1" data-it="1">fi</span></div>
+      <div class="ligrow"><span class="k">f&nbsp;l</span><span class="g lr" data-liga="1" data-it="0">fl</span><span class="g lr" data-liga="0" data-it="1">fl</span><span class="g on lr" data-liga="1" data-it="1">fl</span></div>
+      <div class="ligsec">Built from them</div>
+      <div class="ligrow sub"><span class="k">f&nbsp;f&nbsp;i</span><span class="g lr" data-liga="1" data-it="0">ffi</span><span class="g lr" data-liga="0" data-it="1">ffi</span><span class="g on lr" data-liga="1" data-it="1">ffi</span></div>
+      <div class="ligrow sub"><span class="k">f&nbsp;f&nbsp;l</span><span class="g lr" data-liga="1" data-it="0">ffl</span><span class="g lr" data-liga="0" data-it="1">ffl</span><span class="g on lr" data-liga="1" data-it="1">ffl</span></div>
+      <div class="ligrow sub"><span class="k">f&nbsp;f</span><span class="g lr" data-liga="1" data-it="0">ff</span><span class="g lr" data-liga="0" data-it="1">ff</span><span class="g on lr" data-liga="1" data-it="1">ff</span></div>
+    </div>
+    <div class="sbs ligpanels" id="ligpanels">
+      <article><span class="who">Roman</span><p class="lr" data-liga="1" data-it="0">The final flight of the officer reflected a fine, flat field of fluffy waffles. Affluent fjords, fifty flags, a fifth flask of flax: baffling snuffles and a ruffled sniffle in the office.</p><span class="ft">no ligatures</span></article>
+      <article><span class="who">Italic, ligatures off</span><p class="lr" data-liga="0" data-it="1">The final flight of the officer reflected a fine, flat field of fluffy waffles. Affluent fjords, fifty flags, a fifth flask of flax: baffling snuffles and a ruffled sniffle in the office.</p><span class="ft">font-feature-settings: "liga" 0</span></article>
+      <article class="cur"><span class="who">Italic, ligatures on</span><p class="lr" data-liga="1" data-it="1">The final flight of the officer reflected a fine, flat field of fluffy waffles. Affluent fjords, fifty flags, a fifth flask of flax: baffling snuffles and a ruffled sniffle in the office.</p><span class="ft">font-feature-settings: "liga" 1</span></article>
+    </div>
+    <dl class="others">
+      <dt>U+FB01 U+FB02</dt><dd>The characters ﬁ and ﬂ are still encoded in the roman, for text that already contains them. Nothing substitutes them.</dd>
+      <dt>ij  IJ</dt><dd>Single characters (U+0133, U+0132), typed as such. They are not substituted from i j.</dd>
+      <dt>frac</dt><dd>Type 1/2 with the feature on and it becomes a numerator, a fraction bar and a denominator.</dd>
+      <dt>ordn</dt><dd>“No.” becomes the numero sign №.</dd>
+      <dt>ccmp</dt><dd>Stacked accents for Vietnamese (circumflex or breve with acute, grave, hook or tilde).</dd>
+    </dl>
+  </section>
+
+
+  <section aria-labelledby="try">
+    <div class="sechead">
+      <span class="label">Tester</span>
+      <h2 id="try">Type something</h2>
+    </div>
+    <div class="tester">
+      <div class="controls">
+        <div class="ctl"><label for="wght">wght</label><input id="wght" type="range" min="400" max="700" step="1" value="400"><output id="wghtv" for="wght">400</output></div>
+        <div class="ctl"><label for="size">size</label><input id="size" type="range" min="14" max="120" step="1" value="44"><output id="sizev" for="size">44</output></div>
+        <div class="seg" role="group" aria-label="Style">
+          <button type="button" id="st-roman" aria-pressed="true">Roman</button>
+          <button type="button" id="st-italic" aria-pressed="false">Italic</button>
+        </div>
+        <div class="seg" role="group" aria-label="Figures">
+          <button type="button" data-fig="lnum" aria-pressed="true">1918</button>
+          <button type="button" data-fig="onum" aria-pressed="false">oldstyle</button>
+        </div>
+      </div>
+      <div id="sample" contenteditable="true" spellcheck="false">Affluent fjords glow; the quick brown fox jumps over 1918 lazy dogs.</div>
+    </div>
+  </section>
+
+  <section aria-labelledby="text">
+    <div class="sechead">
+      <span class="label">In text</span>
+      <h2 id="text">At reading size</h2>
+    </div>
+    <div class="text">
+      <article>
+        <h3>A serif made from two</h3>
+        <p>Elanor keeps Lora’s generous x-height, its brushed curves and the wedge serifs that keep lines moving on a screen. <em>Brygada 1918 lends it the ball terminals that hang from c, f, j, r and y like drops of ink</em>, a few of its letters, and <strong>its figures: 1234567890</strong>.</p>
+      </article>
+      <article lang="pl">
+        <h3>Pan Tadeusz, 1834</h3>
+        <p>Litwo! Ojczyzno moja! ty jesteś jak zdrowie. Ile cię trzeba cenić, ten tylko się dowie, kto cię stracił. <em>Dziś piękność twą w całej ozdobie widzę i opisuję, bo tęsknię po tobie.</em></p>
+      </article>
+      <article lang="ru">
+        <h3>Пушкин, 1825</h3>
+        <p>Я помню чудное мгновенье: передо мной явилась ты, как мимолётное виденье, как гений чистой красоты. <em>В томленьях грусти безнадежной, в тревогах шумной суеты.</em></p>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <span class="label">Files</span>
+    <p>Fonts and build scripts are in the project folder: variable fonts in <code>dist/fonts/variable</code>, static TTFs in <code>dist/fonts/ttf</code>, WOFF2 in <code>dist/fonts/webfonts</code>.</p>
+    <p>SIL Open Font License 1.1. Derived from Lora (Olga Karpushina and Alexei Vanyashin, Cyreal) and Brygada 1918 (Mateusz Machalski, Borys Kosmynka and Przemek Hoffer). “Lora” is a Reserved Font Name of its authors.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var GROUPS=[
+    {title:'Ball terminals', why:'<strong>From Brygada.</strong> The terminals of c, f, j, r, y and J are Brygada’s own paths, spliced onto Lora’s strokes. The r’s ball is 14% smaller. The italic keeps Lora’s terminals.',
+     glyphs:['c','f','j','r','y','J']},
+    {title:'Letters', why:'<strong>From Brygada.</strong> a, s, z, S and Z are Brygada’s, scaled to Lora’s proportions (æ and ª follow the a; the bold a is hand-adjusted). The Q gets Brygada’s tail on Lora’s O, and the t is taller (roman and italic).',
+     glyphs:['a','s','z','S','Z','Q','t']},
+    {title:'Figures', why:'<strong>From Brygada</strong>, at Lora’s figure height and spaced tighter. The 1 and 4 stand on Lora’s foot. In bold, every stroke grows the way Lora’s figures do: hairlines by about 32 units, stems by about 52. Oldstyle, tabular, fractions and superiors follow.',
+     glyphs:['1','2','3','4','5','6','7','8','9','0']},
+    {title:'Italic', why:'<strong>A u-shaped y</strong>, like Brygada’s: Lora’s italic u with a straightened right arm and the tail of Lora’s g. The t is taller, and the figures are as in the roman.',
+     glyphs:['y','t','2','3','8'], italic:true}
+  ];
+  var BRY=500/460, NS='http://www.w3.org/2000/svg';
+  var host=document.getElementById('groups');
+  GROUPS.forEach(function(g){
+    var el=document.createElement('div'); el.className='group';
+    var h=document.createElement('h3'); h.textContent=g.title;
+    var p=document.createElement('p'); p.className='why'; p.innerHTML=g.why;
+    var cells=document.createElement('div'); cells.className='cells';
+    g.glyphs.forEach(function(ch){
+      var cell=document.createElement('div'); cell.className='cell';
+      var svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 170 214');
+      svg.setAttribute('role','img'); svg.setAttribute('aria-label',ch+': Elanor over Lora and Brygada');
+      var base=document.createElementNS(NS,'line'); base.setAttribute('class','base');
+      base.setAttribute('x1','0'); base.setAttribute('x2','170'); base.setAttribute('y1','172'); base.setAttribute('y2','172');
+      svg.appendChild(base);
+      [['t-elanor','Elanor',1],['t-bryg','BrygadaRef',BRY],['t-lora','LoraRef',1]].forEach(function(l){
+        var t=document.createElementNS(NS,'text');
+        t.setAttribute('class',l[0]); t.setAttribute('x','85'); t.setAttribute('y','172');
+        t.setAttribute('text-anchor','middle');
+        t.style.fontFamily='"'+l[1]+'",serif'; t.style.fontSize=(150*l[2])+'px';
+        t.style.fontStyle=g.italic?'italic':'normal';
+        t.textContent=ch; svg.appendChild(t);
+      });
+      var cap=document.createElement('span'); cap.className='cap'; cap.textContent=g.italic?ch+' italic':ch;
+      cell.appendChild(svg); cell.appendChild(cap); cells.appendChild(cell);
+    });
+    el.appendChild(h); el.appendChild(p); el.appendChild(cells); host.appendChild(el);
+  });
+  function setW(w){
+    host.querySelectorAll('text').forEach(function(t){t.style.fontWeight=w});
+    document.querySelectorAll('[data-w]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.w===w?'true':'false')});
+  }
+  document.querySelectorAll('[data-w]').forEach(function(b){b.addEventListener('click',function(){setW(b.dataset.w)})});
+  setW('400');
+  [['show-elanor','hide-elanor'],['show-lora','hide-lora'],['show-bryg','hide-bryg']].forEach(function(p){
+    var i=document.getElementById(p[0]);
+    i.addEventListener('change',function(){host.classList.toggle(p[1],!i.checked)});
+  });
+
+  var SBS='<p>A text face is judged on small things: the ball at the end of a c, an r or an f, the fit of z and s, the way a j or a y drops below the line. Figures matter as much, and 2, 3, 5 and 9 should keep their round ends even in a column of 47, 1068 and 3925.</p><p>Jackdaws love my big sphinx of quartz. The five boxing wizards jump quickly, and six crazy kings vowed to abolish my quite pitiful jousts.</p>';
+  var sbs=document.getElementById('sbs'), sbsStyle='r', sbsSize=19;
+  sbs.querySelectorAll('.body').forEach(function(b){b.innerHTML=SBS});
+  function applySbs(){
+    sbs.querySelectorAll('.body').forEach(function(b){
+      b.style.fontSize=(sbsSize*(b.dataset.face==='bryg'?BRY:1))+'px';
+      b.style.fontStyle=sbsStyle==='i'?'italic':'normal';
+      b.style.fontWeight=sbsStyle==='b'?'700':'400';
+    });
+  }
+  function seg(attr,cb){
+    document.querySelectorAll('['+attr+']').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('['+attr+']').forEach(function(x){x.setAttribute('aria-pressed',x===btn?'true':'false')});
+        cb(btn.getAttribute(attr)); applySbs();
+      });
+    });
+  }
+  seg('data-sbs',function(v){sbsStyle=v}); seg('data-sz',function(v){sbsSize=+v});
+  applySbs();
+
+  var ligW='400';
+  function applyLig(){
+    document.querySelectorAll('.lr').forEach(function(el){
+      el.style.fontFeatureSettings='"liga" '+el.dataset.liga;
+      el.style.fontStyle=el.dataset.it==='1'?'italic':'normal';
+      el.style.fontWeight=ligW;
+    });
+  }
+  document.querySelectorAll('[data-lig]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      ligW=btn.dataset.lig==='b'?'700':'400';
+      document.querySelectorAll('[data-lig]').forEach(function(x){x.setAttribute('aria-pressed',x===btn?'true':'false')});
+      applyLig();
+    });
+  });
+  applyLig();
+
+  var sample=document.getElementById('sample');
+  var wght=document.getElementById('wght'), wv=document.getElementById('wghtv');
+  var size=document.getElementById('size'), sv=document.getElementById('sizev');
+  var italic=false, fig='lnum';
+  function apply(){
+    wv.textContent=wght.value; sv.textContent=size.value;
+    sample.style.fontWeight=wght.value;
+    sample.style.fontStyle=italic?'italic':'normal';
+    sample.style.fontSize=size.value+'px';
+    sample.style.fontFeatureSettings=fig==='onum'?'"onum" 1':'normal';
+  }
+  wght.addEventListener('input',apply); size.addEventListener('input',apply);
+  var r=document.getElementById('st-roman'), it=document.getElementById('st-italic');
+  r.addEventListener('click',function(){italic=false;r.setAttribute('aria-pressed','true');it.setAttribute('aria-pressed','false');apply()});
+  it.addEventListener('click',function(){italic=true;it.setAttribute('aria-pressed','true');r.setAttribute('aria-pressed','false');apply()});
+  document.querySelectorAll('[data-fig]').forEach(function(b){
+    b.addEventListener('click',function(){
+      fig=b.dataset.fig;
+      document.querySelectorAll('[data-fig]').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+      apply();
+    });
+  });
+  apply();
+})();
+</script>

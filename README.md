@@ -20,7 +20,7 @@ carry most of what you liked, including its clarity on screens. Brygada's traits
 - `dist/fonts/variable/`: `Elanor[wght].ttf`, `Elanor-Italic[wght].ttf` (weight 400–700)
 - `dist/fonts/ttf/`: static Regular, Medium, SemiBold, Bold and their italics (overlaps removed, ttfautohinted)
 - `dist/fonts/webfonts/`: WOFF2 versions of all of the above
-- `dist/specimen.html`: the specimen page
+- `dist/specimen.html`: the specimen page (source: `specimen/`)
 - `dist/OFL.txt`: license
 
 OpenType features: `liga` (italic only: fi, fl; the roman has no ligatures, its f keeps the ball terminal) `kern` `onum` `lnum` `tnum` `pnum` `frac` `numr` `dnom` `sups` `subs` `sinf`
@@ -31,6 +31,7 @@ plus everything Lora already had (`case`, `locl`, `ordn`, …).
 ```sh
 uv run python build_font.py all   # edits Lora's masters, rebuilds the variable fonts into out/
 uv run python finalize.py         # naming, static instances, hinting, woff2 -> dist/
+uv run python tools/make_specimen.py   # specimen/template.html + dist fonts -> dist/specimen.html
 ```
 
 All design decisions are data in `fontmix/spec_roman.py` and `fontmix/spec_italic.py` (counter
