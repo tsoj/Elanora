@@ -9,7 +9,7 @@ carry most of what you liked, including its clarity on screens. Brygada's traits
 | Trait (from Brygada) | How it was applied |
 | --- | --- |
 | Ball / teardrop terminals | Brygada's own paths. The terminals of c, f, ſ, j, r, y, J, є, э and the tail of ŋ are cut out of Brygada and spliced onto Lora's strokes (`fontmix/splice.py`, `fontmix/splice_jobs.py`); the joint is blended so the stroke tapers smoothly. The r's ball is shrunk 14% and its spacing restored. The italic keeps Lora's own terminals. g, ǥ, fi, fl, з, ƒ keep Lora's teardrops. |
-| Bold | The bold master of Brygada-derived glyphs is Perla Regular + Lora's own Regular→Bold movement (`fontmix/boldxfer.py`): spliced sections are matched along the Lora path they replaced (stem stretches keep the stem's movement), replaced counters around their loop, whole-copied glyphs (S, z, Z, Q) by nearest point. f and a keep Brygada's own bold (the bold a, æ and ª hand-adjusted, `manual/a-bold-brygada.ufo`); s and the figures are a lighter Brygada thickened evenly (ink-aware offset); figures with ball terminals are merged into one outline first. |
+| Bold | The bold master of Brygada-derived glyphs is Perla Regular + Lora's own Regular→Bold movement (`fontmix/boldxfer.py`): spliced sections are matched along the Lora path they replaced (stem stretches keep the stem's movement), replaced counters around their loop, whole-copied glyphs (S, z, Z, Q) by nearest point. f and a keep Brygada's own bold (the bold a, æ and ª hand-adjusted, `manual/a-bold-brygada.ufo`); s is a lighter Brygada thickened evenly. Bold figures: the regular figure (overlaps merged) with every outline edge offset by Lora's own Regular→Bold growth for a stroke of that width (hairlines +32, stems +52 units; `contrast_figure` in `fontmix/figures.py`), so both weights stay point-compatible. |
 | Arches and bowls | Lora's own, unchanged (n h m u b d p q and relatives are identical to Lora in every weight). Brygada-style arches are retired for now; the code is kept (`VARIANTS` in `build_font.py`: `main` = smooth morph of Lora's arches to Brygada's joins, `literal` = spliced Brygada paths). |
 | Brygada letters | The Q's tail (laid onto Perla's O), Brygada's Z/z terminal serifs, a taller t, and Brygada's s, S, a/æ/ª, z, Z (copied, scaled to Perla's metrics; accents re-anchored). |
 | Italic y | Brygada's u-shaped italic y: Lora's italic u (right arm straightened) with the tail of Lora's g. |
@@ -63,6 +63,17 @@ edited one, moves the matching points of æ and ª by the same amounts (ª scale
 a's follow as composites. The intermediate weights interpolate automatically. It prints how far
 the points moved (`hand-edited bold a: …`) or refuses an incompatible file with an explanation.
 `uv run python tools/export_bold_a.py --force` re-exports fresh, unedited files.
+
+## Hand-editing the bold figures
+
+`manual/figures-bold-roman.ufo` and `manual/figures-bold-italic.ufo` hold the bold lining (0–9)
+and oldstyle (`.osf`) figures, with the regular figure in each glyph's background layer and Lora
+Bold's figures as grey references. Edit them the same way as the bold a: move points and handles,
+never add or delete them. Sharp inner corners (where a ball meets its stroke, the 8's waist) are
+two points on top of each other, so each side can be moved on its own. Save as UFO
+(FontForge: File › Generate Fonts… › Unified Font Object) and rebuild. Each edit is carried to that
+figure's tabular, numerator, denominator, superior and inferior versions; the build prints which
+glyphs moved. `uv run python tools/export_bold_figures.py --force` re-exports fresh files.
 
 ## License
 

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="four.lora-bold" format="2">
+  <advance width="533"/>
+  <outline>
+    <contour>
+      <point x="180" y="0" type="line"/>
+      <point x="183" y="66" type="line"/>
+      <point x="206" y="67"/>
+      <point x="238" y="77"/>
+      <point x="257" y="113"/>
+      <point x="259" y="153" type="qcurve"/>
+      <point x="260" y="181" type="line"/>
+      <point x="0" y="181" type="line"/>
+      <point x="5" y="275" type="line"/>
+      <point x="368" y="716" type="line"/>
+      <point x="429" y="716" type="line"/>
+      <point x="405" y="271" type="line"/>
+      <point x="503" y="271" type="line"/>
+      <point x="498" y="181" type="line"/>
+      <point x="400" y="181" type="line"/>
+      <point x="398" y="131" type="line"/>
+      <point x="397" y="112"/>
+      <point x="394" y="87"/>
+      <point x="391" y="74" type="qcurve"/>
+      <point x="466" y="77" type="line"/>
+      <point x="462" y="0" type="line"/>
+    </contour>
+    <contour>
+      <point x="265" y="273" type="line"/>
+      <point x="278" y="494" type="line"/>
+      <point x="277" y="494" type="line"/>
+      <point x="97" y="274" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>public.markColor</key>
+      <string>0.6,0.6,0.6,1</string>
+    </dict>
+  </lib>
+</glyph>

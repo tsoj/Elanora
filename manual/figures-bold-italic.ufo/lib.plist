@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>public.glyphOrder</key>
+    <array>
+      <string>zero</string>
+      <string>one</string>
+      <string>two</string>
+      <string>three</string>
+      <string>four</string>
+      <string>five</string>
+      <string>six</string>
+      <string>seven</string>
+      <string>eight</string>
+      <string>nine</string>
+      <string>zero.osf</string>
+      <string>one.osf</string>
+      <string>two.osf</string>
+      <string>three.osf</string>
+      <string>four.osf</string>
+      <string>five.osf</string>
+      <string>six.osf</string>
+      <string>seven.osf</string>
+      <string>eight.osf</string>
+      <string>nine.osf</string>
+      <string>zero.lora-bold</string>
+      <string>one.lora-bold</string>
+      <string>two.lora-bold</string>
+      <string>three.lora-bold</string>
+      <string>four.lora-bold</string>
+      <string>five.lora-bold</string>
+      <string>six.lora-bold</string>
+      <string>seven.lora-bold</string>
+      <string>eight.lora-bold</string>
+      <string>nine.lora-bold</string>
+    </array>
+  </dict>
+</plist>

@@ -223,3 +223,148 @@ def apply_manual_a(M, path, log=None):
     if log is not None:
         log.append(("manual-bold-a", {"file": path, "max move": rep}))
     return rep
+
+
+# ------------------------------------------------------------------ bold figures
+FIG_NAMES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+SUP_NAMES = ["uni2070", "uni00B9", "uni00B2", "uni00B3", "uni2074", "uni2075", "uni2076", "uni2077", "uni2078", "uni2079"]
+SUB_NAMES = [f"uni208{i}" for i in range(10)]
+FIG_EDITABLE = FIG_NAMES + [f + ".osf" for f in FIG_NAMES]
+FIG_NOTE = ("Edit the bold figures (0-9 lining and .osf oldstyle). Keep every point: move points and "
+            "handles only. Sharp inner corners are two points on top of each other: move each on its "
+            "own. Grey glyphs are references and are not read back. Tabular, numerator, denominator, "
+            "superior and inferior figures follow automatically.")
+
+
+def fig_derived(name):
+    """Glyphs whose bold follows the edit of `name`."""
+    if name.endswith(".osf"):
+        return [name[:-4] + ".tosf"]
+    i = FIG_NAMES.index(name)
+    return [name + ".tf", name + ".numr", name + ".dnom", SUP_NAMES[i], SUB_NAMES[i]]
+
+
+def dump_figs_ufo(M, path, style, lora=None):
+    import ufoLib2
+    lo, hi = M[400], M[700]
+    ufo = ufoLib2.Font()
+    ufo.info.familyName = f"Perla figures-edit ({style})"
+    ufo.info.styleName = "Bold"
+    ufo.info.unitsPerEm = hi["head"].unitsPerEm
+    ufo.info.ascender, ufo.info.descender = hi["hhea"].ascent, hi["hhea"].descent
+    ufo.info.xHeight, ufo.info.capHeight = 500, 700
+    ufo.info.note = FIG_NOTE
+    bg = ufo.newLayer("public.background")
+    order = []
+    cmap = {v: k for k, v in hi.getBestCmap().items()}
+    for n in FIG_EDITABLE:
+        g = ufo.newGlyph(n)
+        _glyf_to_ufo(g, hi, n)
+        g.width = hi["hmtx"][n][0]
+        if n in cmap:
+            g.unicodes = [cmap[n]]
+        b = bg.newGlyph(n)
+        _glyf_to_ufo(b, lo, n)
+        b.width = lo["hmtx"][n][0]
+        order.append(n)
+    if lora is not None:
+        for n in FIG_NAMES:
+            g = ufo.newGlyph(n + ".lora-bold")
+            _glyf_to_ufo(g, lora, n)
+            g.width = lora["hmtx"][n][0]
+            g.markColor = "0.6,0.6,0.6,1"
+            order.append(n + ".lora-bold")
+    ufo.glyphOrder = order
+    ufo.save(path, overwrite=True)
+    return path
+
+
+def _explicit_both(M, name):
+    """Make implied on-curve points explicit in both masters of `name` (outline unchanged)."""
+    from .geom import explicitize
+    for w in (400, 700):
+        f = M[w]
+        cs = [explicitize(c) for c in glyph_contours(f["glyf"], name)]
+        set_glyph_contours(f["glyf"], name, cs)
+        f["hmtx"][name] = (f["hmtx"][name][0], f["glyf"][name].xMin)
+
+
+def apply_manual_figs(M, path):
+    """Replace the bold figures by the hand-edited ones and carry each edit to the figure's
+    tabular / numerator / denominator / superior / inferior versions (fitted by an affine map
+    between the regular outlines; skipped, and reported, where the point structures differ)."""
+    import ufoLib2
+    from .geom import explicitize
+    lo, hi = M[400], M[700]
+    ufo = ufoLib2.Font.open(path)
+    rep = {}
+    for name in FIG_EDITABLE:
+        if name not in ufo:
+            continue
+        new, adv = load_ufo_glyph(path, name)
+        base = glyph_contours(hi["glyf"], name)
+        try:
+            new = _align(base, new)
+        except SystemExit:
+            _explicit_both(M, name)
+            base = glyph_contours(hi["glyf"], name)
+            try:
+                new = _align(base, [explicitize(c) for c in new])
+            except SystemExit as e:
+                raise SystemExit(f"{path}, glyph '{name}': {e}")
+        B = np.array([p[:2] for c in base for p in c])
+        N = np.array([p[:2] for c in new for p in c])
+        D = N - B
+        if not np.abs(D).max() and int(round(adv)) == hi["hmtx"][name][0]:
+            continue
+        set_glyph_contours(hi["glyf"], name, new)
+        dadv = int(round(adv)) - hi["hmtx"][name][0]
+        hi["hmtx"][name] = (int(round(adv)), hi["glyf"][name].xMin)
+        rep[name] = round(float(np.hypot(*D.T).max()), 1)
+        # carry to the derived glyphs
+        R = np.array([p[:2] for c in glyph_contours(lo["glyf"], name) for p in c])
+        for t in fig_derived(name):
+            if t not in hi["glyf"].keys() or hi["glyf"][t].isComposite():
+                continue
+            rt = glyph_contours(lo["glyf"], t)
+            if [[p[2] for p in c] for c in rt] != [[p[2] for p in c] for c in glyph_contours(lo["glyf"], name)]:
+                _explicit_both(M, t)
+                rt = glyph_contours(lo["glyf"], t)
+            T = np.array([p[:2] for c in rt for p in c])
+            if T.shape != R.shape:
+                # drawn with other points (Brygada's small figures): map onto the edited figure's
+                # box, move each point like the edited points near it, map the movement back
+                bt = glyph_contours(hi["glyf"], t)
+                Bt = np.array([p[:2] for c in bt for p in c])
+                lo_t, hi_t = Bt.min(0), Bt.max(0)
+                lo_b, hi_b = B.min(0), B.max(0)
+                k = (hi_b - lo_b) / np.maximum(hi_t - lo_t, 1e-6)
+                mapped = [[[(p[0] - lo_t[0]) * k[0] + lo_b[0], (p[1] - lo_t[1]) * k[1] + lo_b[1], p[2]] for p in c] for c in bt]
+                before = [[list(p) for p in c] for c in mapped]
+                _carry(mapped, B, D, radius=40.0)
+                for c, cb, cm in zip(bt, before, mapped):
+                    for p, pb, pm in zip(c, cb, cm):
+                        p[0] += (pm[0] - pb[0]) / k[0]
+                        p[1] += (pm[1] - pb[1]) / k[1]
+                set_glyph_contours(hi["glyf"], t, bt)
+                hi["hmtx"][t] = (hi["hmtx"][t][0], hi["glyf"][t].xMin)
+                continue
+            A = np.c_[R, np.ones(len(R))]
+            coef, *_ = np.linalg.lstsq(A, T, rcond=None)  # T ~ R @ L + t
+            if float(np.sqrt(np.mean((A @ coef - T) ** 2))) > 3.0:
+                rep[t] = "skipped (different shape)"
+                continue
+            L = coef[:2]
+            bt = glyph_contours(hi["glyf"], t)
+            dt = D @ L
+            k = 0
+            for c in bt:
+                for p in c:
+                    p[0] += dt[k, 0]
+                    p[1] += dt[k, 1]
+                    k += 1
+            set_glyph_contours(hi["glyf"], t, bt)
+            s = float(np.sqrt(abs(np.linalg.det(L))))
+            hi["hmtx"][t] = (hi["hmtx"][t][0] + (0 if t.endswith((".tf", ".tosf")) else int(round(dadv * s))),
+                             hi["glyf"][t].xMin)
+    return rep

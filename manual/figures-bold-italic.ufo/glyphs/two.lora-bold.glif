@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="two.lora-bold" format="2">
+  <advance width="522"/>
+  <outline>
+    <contour>
+      <point x="275" y="716" type="qcurve"/>
+      <point x="315" y="716"/>
+      <point x="394" y="696"/>
+      <point x="457" y="652"/>
+      <point x="493" y="580"/>
+      <point x="490" y="527" type="qcurve"/>
+      <point x="489" y="502"/>
+      <point x="467" y="447"/>
+      <point x="416" y="382"/>
+      <point x="325" y="298"/>
+      <point x="254" y="242" type="qcurve"/>
+      <point x="197" y="197"/>
+      <point x="141" y="123"/>
+      <point x="135" y="103" type="qcurve"/>
+      <point x="331" y="98" type="line"/>
+      <point x="353" y="97"/>
+      <point x="388" y="106"/>
+      <point x="409" y="135"/>
+      <point x="410" y="163" type="qcurve"/>
+      <point x="473" y="163" type="line"/>
+      <point x="457" y="0" type="line"/>
+      <point x="19" y="0" type="line"/>
+      <point x="22" y="52"/>
+      <point x="52" y="134"/>
+      <point x="101" y="200"/>
+      <point x="159" y="256"/>
+      <point x="189" y="283" type="qcurve"/>
+      <point x="266" y="351"/>
+      <point x="335" y="461"/>
+      <point x="338" y="515" type="qcurve"/>
+      <point x="340" y="547"/>
+      <point x="325" y="607"/>
+      <point x="284" y="646"/>
+      <point x="246" y="645" type="qcurve"/>
+      <point x="219" y="645"/>
+      <point x="175" y="620"/>
+      <point x="164" y="603" type="qcurve"/>
+      <point x="174" y="592"/>
+      <point x="182" y="560"/>
+      <point x="181" y="549" type="qcurve"/>
+      <point x="180" y="530"/>
+      <point x="146" y="486"/>
+      <point x="108" y="487" type="qcurve"/>
+      <point x="77" y="488"/>
+      <point x="48" y="531"/>
+      <point x="49" y="560" type="qcurve"/>
+      <point x="50" y="583"/>
+      <point x="81" y="636"/>
+      <point x="139" y="685"/>
+      <point x="222" y="716"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>public.markColor</key>
+      <string>0.6,0.6,0.6,1</string>
+    </dict>
+  </lib>
+</glyph>

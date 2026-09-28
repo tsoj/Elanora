@@ -28,7 +28,7 @@ OUT = {"roman": "out/Roman-VF.ttf", "italic": "out/Italic-VF.ttf"}
 
 BOLD_FIGURES_FROM_LORA = False
 # bold figures: a lighter Brygada, thickened evenly -> Lora-like contrast (stems ~144, hairlines ~72)
-FIG_WEIGHTS = {"roman": {400: 400, 700: 500}, "italic": {400: 400, 700: 500}}
+FIG_WEIGHTS = {"roman": {400: 400, 700: 400}, "italic": {400: 400, 700: 400}}  # bold figures derived from the regular (figures.CONTRAST_BOLD)
 FIG_EMB = {700: 17}
 ARCH_GLYPHS = ["n", "h", "m", "u", "b", "p", "d", "q", "hbar", "thorn", "dcroat", "dcaron"]
 ARCH_FACTOR = 1.0  # main: how far Lora's arches move toward Brygada's join heights
@@ -40,6 +40,17 @@ VARIANTS = {"roman": ["classic"], "italic": ["main"]}
 # Regular->Bold movement, like most other letters. A hand-edited version of the chosen one is
 # read from manual/a-bold-<mode>.ufo when that file exists (see tools/export_bold_a.py).
 BOLD_A_MODE = os.environ.get("PERLA_BOLD_A", "brygada")
+
+
+def manual_figs(M, style, src):
+    """Hand-edited bold figures: export with PERLA_DUMP_FIGS=<dir>, read back from
+    manual/figures-bold-<style>.ufo when that file exists (tools/export_bold_figures.py)."""
+    from fontmix import manual
+    if os.environ.get("PERLA_DUMP_FIGS"):
+        manual.dump_figs_ufo(M, os.path.join(os.environ["PERLA_DUMP_FIGS"], f"figures-bold-{style}.ufo"),
+                             style, lora=load_masters(src)[700])
+    elif os.path.exists(f"manual/figures-bold-{style}.ufo"):
+        print(f"hand-edited bold figures ({style}):", manual.apply_manual_figs(M, f"manual/figures-bold-{style}.ufo"))
 
 
 def build(style, log=None, variant="main", out=None):
@@ -150,6 +161,7 @@ def build(style, log=None, variant="main", out=None):
                 log.append(("bold-joins", jr))
         if log is not None:
             log.append(("brygada-feet", rep))
+        manual_figs(M, style, src)
         kern_log = stage_kern_figures(M, load_masters(src), brygada_fig_kerning(BRYG[style], {400: 400, 700: 648}))
     else:
         from fontmix import spec_italic as S
@@ -178,6 +190,7 @@ def build(style, log=None, variant="main", out=None):
             respace(M[w], NUMR + DNOM + SUPS + SUBS, 0.85)
         if log is not None:
             log.append(("brygada-feet", rep))
+        manual_figs(M, style, src)
         kern_log = stage_kern_figures(M, load_masters(src), brygada_fig_kerning(BRYG[style], S.FIG_WEIGHTS))
     if log is not None:
         log.append(("kern-deltas", {w: len(v) for w, v in kern_log.items()}))

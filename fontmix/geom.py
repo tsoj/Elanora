@@ -306,3 +306,216 @@ def fix_coincident(contours, push=12.0, tol=1.5):
                     p[1] -= nrm_out[1] * push
                     break
     return out
+
+
+def stroke_widths(contours, res=1.0):
+    """Stroke width at every point of an overlap-free outline: from each on-curve point, walk
+    inward along the corner bisector through the distance field until the largest inscribed
+    circle is passed; width = its diameter. Off-curve points take their neighbours' mean."""
+    from PIL import Image, ImageDraw
+    from scipy.ndimage import distance_transform_edt
+    polys = [sample(c, 12) for c in contours]
+    allp = np.vstack(polys)
+    x0, y0 = allp.min(0) - 20
+    x1, y1 = allp.max(0) + 20
+    W, H = int((x1 - x0) / res) + 1, int((y1 - y0) / res) + 1
+    mask = np.zeros((H, W), bool)
+    for s in polys:
+        im = Image.new("1", (W, H), 0)
+        ImageDraw.Draw(im).polygon([((x - x0) / res, (y1 - y) / res) for x, y in s], fill=1)
+        mask ^= np.array(im)
+    dt = distance_transform_edt(mask) * res
+
+    def at(q):
+        i, j = int(round((y1 - q[1]) / res)), int(round((q[0] - x0) / res))
+        if 0 <= i < H and 0 <= j < W:
+            return dt[i, j], mask[i, j]
+        return 0.0, False
+    out = []
+    for c in contours:
+        n = len(c)
+        xy = np.array([p[:2] for p in c], float)
+        prev = xy - np.roll(xy, 1, axis=0)
+        nxt = np.roll(xy, -1, axis=0) - xy
+
+        def nrm(v):
+            v = v / np.maximum(1e-9, np.hypot(v[:, 0], v[:, 1]))[:, None]
+            return np.c_[-v[:, 1], v[:, 0]]
+        bis = nrm(prev) + nrm(nxt)
+        bis = bis / np.maximum(1e-9, np.hypot(bis[:, 0], bis[:, 1]))[:, None]
+        w = np.full(n, np.nan)
+        for i in range(n):
+            if not c[i][2]:
+                continue
+            nin = bis[i] if at(xy[i] + 3 * bis[i])[1] else -bis[i]
+            best = 0.0
+            for t in np.arange(1.0, 300.0, 1.0):
+                v, inside = at(xy[i] + t * nin)
+                if not inside or v < best - 2:
+                    break
+                best = max(best, v)
+            w[i] = 2 * best
+        for i in range(n):
+            if np.isnan(w[i]):
+                nb = [w[j % n] for j in (i - 1, i + 1) if not np.isnan(w[j % n])]
+                w[i] = float(np.mean(nb)) if nb else 0.0
+        out.append(w)
+    return out
+
+
+def embolden_var(contours, deltas, miter_limit=1.15, concave_limit=4.0):
+    """Like embolden, but with a per-point offset (list of arrays matching the contours)."""
+    out = []
+    for c, dl in zip(contours, deltas):
+        n = len(c)
+        xy = np.array([p[:2] for p in c], float)
+        area = 0.5 * np.sum(xy[:, 0] * np.roll(xy[:, 1], -1) - np.roll(xy[:, 0], -1) * xy[:, 1])
+        prev = xy - np.roll(xy, 1, axis=0)
+        nxt = np.roll(xy, -1, axis=0) - xy
+
+        def nrm(v):
+            v = v / np.maximum(1e-9, np.hypot(v[:, 0], v[:, 1]))[:, None]
+            return np.c_[-v[:, 1], v[:, 0]]
+        n1, n2 = nrm(prev), nrm(nxt)
+        bis = n1 + n2
+        bl = np.hypot(bis[:, 0], bis[:, 1])
+        bis = np.where(bl[:, None] < 1e-6, n1, bis / np.maximum(bl, 1e-9)[:, None])
+        cross = prev[:, 0] * nxt[:, 1] - prev[:, 1] * nxt[:, 0]
+        convex = cross * np.sign(area) > 0
+        lim = np.where(convex, miter_limit, concave_limit)
+        cosh = np.clip((bis * n1).sum(axis=1), 1 / lim, 1.0)
+        off = bis * (np.asarray(dl) / cosh)[:, None]
+        out.append([[xy[i, 0] + off[i, 0], xy[i, 1] + off[i, 1], c[i][2]] for i in range(n)])
+    return out
+
+
+def _distance_field(contours, res=1.0):
+    from PIL import Image, ImageDraw
+    from scipy.ndimage import distance_transform_edt
+    polys = [sample(c, 12) for c in contours]
+    allp = np.vstack(polys)
+    x0, y0 = allp.min(0) - 40
+    x1, y1 = allp.max(0) + 40
+    W, H = int((x1 - x0) / res) + 1, int((y1 - y0) / res) + 1
+    mask = np.zeros((H, W), bool)
+    for s in polys:
+        im = Image.new("1", (W, H), 0)
+        ImageDraw.Draw(im).polygon([((x - x0) / res, (y1 - y) / res) for x, y in s], fill=1)
+        mask ^= np.array(im)
+    dt = distance_transform_edt(mask) * res
+
+    def at(q):
+        i, j = int(round((y1 - q[1]) / res)), int(round((q[0] - x0) / res))
+        if 0 <= i < H and 0 <= j < W:
+            return dt[i, j], mask[i, j]
+        return 0.0, False
+    return at
+
+
+def edge_widths(contours, ink=None):
+    """Stroke width across every control-polygon edge (point i -> i+1) of an overlap-free
+    outline: from the edge midpoint, walk inward along the edge normal through the distance
+    field; width = diameter of the largest inscribed circle met on the way."""
+    at = _distance_field(ink if ink is not None else contours)
+    out = []
+    for c in contours:
+        n = len(c)
+        xy = np.array([p[:2] for p in c], float)
+        ws = np.zeros(n)
+        for i in range(n):
+            a, b = xy[i], xy[(i + 1) % n]
+            v = b - a
+            L = np.hypot(*v)
+            if L < 1e-6:
+                ws[i] = np.nan
+                continue
+            nrm = np.array([-v[1], v[0]]) / L
+            m = (a + b) / 2
+            # inward = the side with ink next to the edge
+            nin = -nrm if at(m - 4 * nrm)[1] or not at(m + 4 * nrm)[1] else nrm
+            # walk inward while the distance to the outline still grows at (nearly) full rate:
+            # past the stroke's centre line it grows slower (towards a junction) or shrinks
+            best, entered, run = 0.0, False, []
+            for t in np.arange(-30.0, 300.0, 1.0):
+                val, inside = at(m + t * nin)
+                if not inside:
+                    if entered:
+                        break
+                    continue
+                entered = True
+                run.append(val)
+                if len(run) > 6 and run[-1] - run[-5] < 0.6 * 4:
+                    break
+                best = max(best, val)
+            ws[i] = 2 * best
+        for i in range(n):
+            if np.isnan(ws[i]):
+                ws[i] = ws[i - 1]
+        out.append(ws)
+    return out
+
+
+def offset_edges(contours, edge_deltas, miter_limit=1.6, concave_limit=4.0, crease_limit=4.0, crease_narrow=115.0):
+    """Offset each control-polygon edge outward by its own distance and put every point where
+    its two offset edges meet (a true outline offset with per-edge distances). Convex corners
+    are miter-limited. Keeps the point structure."""
+    out = []
+    for c, de in zip(contours, edge_deltas):
+        n = len(c)
+        xy = np.array([p[:2] for p in c], float)
+        area = 0.5 * np.sum(xy[:, 0] * np.roll(xy[:, 1], -1) - np.roll(xy[:, 0], -1) * xy[:, 1])
+        new = []
+        rigid = {}
+        for i in range(n):
+            a, p, b = xy[i - 1], xy[i], xy[(i + 1) % n]
+            v1, v2 = p - a, b - p
+            l1, l2 = np.hypot(*v1), np.hypot(*v2)
+            n1 = np.array([-v1[1], v1[0]]) / max(l1, 1e-9)
+            n2 = np.array([-v2[1], v2[0]]) / max(l2, 1e-9)
+            d1, d2 = de[i - 1], de[i]
+            det = n1[0] * n2[1] - n1[1] * n2[0]
+            if (l2 < 1e-6) != (l1 < 1e-6):
+                # split crease (two coincident points). The two real edges meeting there:
+                if l2 < 1e-6:
+                    A, B, dA, dB = v1, xy[(i + 2) % n] - xy[(i + 1) % n], d1, de[(i + 1) % n]
+                else:
+                    A, B, dA, dB = xy[i - 1] - xy[i - 2], v2, de[i - 2], d2
+                lA, lB = max(np.hypot(*A), 1e-9), max(np.hypot(*B), 1e-9)
+                nA = np.array([-A[1], A[0]]) / lA
+                nB = np.array([-B[1], B[0]]) / lB
+                turn = math.degrees(math.acos(float(np.clip(A @ B / lA / lB, -1, 1))))
+                dt = nA[0] * nB[1] - nA[1] * nB[0]
+                if turn > crease_narrow or abs(dt) < 0.05:
+                    # narrow wedge: the true corner would shoot far out; each copy follows its
+                    # own edge instead, and so does the handle next to it (the edge shifts parallel)
+                    if l2 < 1e-6:
+                        x = nA * dA
+                        rigid[(i - 1) % n] = x
+                    else:
+                        x = nB * dB
+                        rigid[(i + 1) % n] = x
+                else:
+                    # wider crease (a ball meeting its stroke): both copies at the true corner
+                    x = np.linalg.solve(np.array([nA, nB]), np.array([dA, dB]))
+                    lim = crease_limit * max(abs(dA), abs(dB))
+                    L = np.hypot(*x)
+                    if L > lim:
+                        x *= lim / L
+            elif abs(det) < 0.05:  # (nearly) straight: average normal
+                nn = n1 + n2
+                nn /= max(np.hypot(*nn), 1e-9)
+                x = nn * (d1 + d2) / 2
+            else:
+                x = np.linalg.solve(np.array([n1, n2]), np.array([d1, d2]))
+                convex = (v1[0] * v2[1] - v1[1] * v2[0]) * np.sign(area) > 0
+                lim = (miter_limit if convex else concave_limit) * max(abs(d1), abs(d2))
+                L = np.hypot(*x)
+                if L > lim:
+                    x *= lim / L
+            new.append([p[0] + x[0], p[1] + x[1], c[i][2]])
+        # handles next to a split crease move with their copy: that edge shifts in parallel
+        for j, x in rigid.items():
+            if not c[j][2]:
+                new[j][0], new[j][1] = xy[j][0] + x[0], xy[j][1] + x[1]
+        out.append(new)
+    return out

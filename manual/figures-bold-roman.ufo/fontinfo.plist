@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>ascender</key>
+    <integer>1006</integer>
+    <key>capHeight</key>
+    <integer>700</integer>
+    <key>descender</key>
+    <integer>-274</integer>
+    <key>familyName</key>
+    <string>Perla figures-edit (roman)</string>
+    <key>note</key>
+    <string>Edit the bold figures (0-9 lining and .osf oldstyle). Keep every point: move points and handles only. Sharp inner corners are two points on top of each other: move each on its own. Grey glyphs are references and are not read back. Tabular, numerator, denominator, superior and inferior figures follow automatically.</string>
+    <key>styleName</key>
+    <string>Bold</string>
+    <key>unitsPerEm</key>
+    <integer>1000</integer>
+    <key>xHeight</key>
+    <integer>500</integer>
+  </dict>
+</plist>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="seven.lora-bold" format="2">
+  <advance width="469"/>
+  <outline>
+    <contour>
+      <point x="200" y="-16" type="qcurve"/>
+      <point x="169" y="-16"/>
+      <point x="144" y="20"/>
+      <point x="144" y="42" type="qcurve"/>
+      <point x="144" y="62"/>
+      <point x="163" y="124"/>
+      <point x="193" y="199"/>
+      <point x="209" y="236" type="qcurve"/>
+      <point x="226" y="276"/>
+      <point x="270" y="380"/>
+      <point x="328" y="514"/>
+      <point x="364" y="599" type="qcurve"/>
+      <point x="154" y="601" type="line"/>
+      <point x="120" y="602"/>
+      <point x="78" y="571"/>
+      <point x="78" y="530" type="qcurve"/>
+      <point x="15" y="530" type="line"/>
+      <point x="22" y="700" type="line"/>
+      <point x="448" y="700" type="line"/>
+      <point x="448" y="609" type="line"/>
+      <point x="414" y="540"/>
+      <point x="365" y="410"/>
+      <point x="326" y="280"/>
+      <point x="291" y="140"/>
+      <point x="271" y="60" type="qcurve"/>
+      <point x="264" y="32"/>
+      <point x="229" y="-17"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>public.markColor</key>
+      <string>0.6,0.6,0.6,1</string>
+    </dict>
+  </lib>
+</glyph>
