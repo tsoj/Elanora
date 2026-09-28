@@ -3,7 +3,7 @@
 <plist version="1.0">
   <dict>
     <key>familyName</key>
-    <string>Perla a-edit (brygada)</string>
+    <string>Elanora a-edit (brygada)</string>
     <key>styleName</key>
     <string>Bold</string>
     <key>unitsPerEm</key>
@@ -52,9 +52,9 @@
     <key>openTypeOS2WinDescent</key>
     <integer>16</integer>
     <key>postscriptFontName</key>
-    <string>Perla a-edit (brygada)-Bold</string>
+    <string>Elanora a-edit (brygada)-Bold</string>
     <key>postscriptFullName</key>
-    <string>Perla a-edit (brygada) Bold</string>
+    <string>Elanora a-edit (brygada) Bold</string>
     <key>postscriptWeightName</key>
     <string>Regular</string>
     <key>postscriptUnderlineThickness</key>

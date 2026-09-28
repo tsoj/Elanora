@@ -2,8 +2,8 @@
 from .transplant import match_weight, transplant, reanchor, rebuild_accented
 from .tweaks import slant_terminals, stretch_top, q_with_brygada_tail
 
-LC = 500 / 460  # Brygada x-height -> Elanor
-UC = 700 / 670  # Brygada cap height -> Elanor
+LC = 500 / 460  # Brygada x-height -> Elanora
+UC = 700 / 670  # Brygada cap height -> Elanora
 # t's ascender: 85% of the way from Lora's t to Brygada's, measured as the position between
 # x-height and ascender (Lora 55%, Brygada 76% -> 73%; Brygada's ascenders are taller than
 # Lora's, so absolute heights would overshoot): 500 + 0.73 * (755 - 500) = 686.

@@ -1,4 +1,4 @@
-"""Plot Elanor-base (widened Lora) and scaled Brygada glyphs with point indices side by side."""
+"""Plot Elanora-base (widened Lora) and scaled Brygada glyphs with point indices side by side."""
 import sys, copy; sys.path.insert(0,"."); sys.path.insert(0,"tools")
 from fontmix.masters import load_masters
 from fontmix.stages import stage_widen
@@ -32,6 +32,6 @@ def pairplot(names, out, style="roman", cell=520, box=None, w=400):
     img=Image.new("RGB",(2*cell,len(names)*cell),"white")
     for r,n in enumerate(names):
         bx=box[n] if isinstance(box,dict) else (box or (-60,-300,760,800))
-        draw(glyph_contours(M[w]['glyf'],n),img,(0,r*cell),cell,bx,f"Elanor base {n}")
+        draw(glyph_contours(M[w]['glyf'],n),img,(0,r*cell),cell,bx,f"Elanora base {n}")
         draw(brygada_contours(B,n,500/460,shear=(0.0 if style=="roman" else -0.0424)),img,(cell,r*cell),cell,bx,f"Brygada {n} (x500)")
     img.save(out)

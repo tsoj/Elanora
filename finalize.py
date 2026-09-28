@@ -42,7 +42,7 @@ def main():
             f.flavor = "woff2"
             f.save(f"{DIST}/fonts/webfonts/{FAMILY}-{sn}.woff2")
             print("wrote", path)
-    # variants (installable next to Elanor under their own family names)
+    # variants (installable next to Elanora under their own family names)
     os.makedirs(f"{DIST}/fonts/versions", exist_ok=True)
     for vf_path in sorted(glob.glob("out/Roman-VF-*.ttf") + glob.glob("out/Italic-VF-*.ttf")):
         italic = "Italic" in vf_path
@@ -62,7 +62,9 @@ def main():
         vf.save(f"{DIST}/fonts/versions/{fn}.woff2")
         print("wrote variant", fn)
     lic = open("src/lora_OFL.txt").read().split("\n", 1)[1]
-    open(f"{DIST}/OFL.txt", "w").write(COPYRIGHT.replace(". Copyright", ".\nCopyright") + "\n" + lic)
+    ofl = COPYRIGHT.replace(". Copyright", ".\nCopyright") + "\n" + lic
+    open(f"{DIST}/OFL.txt", "w").write(ofl)
+    open("OFL.txt", "w").write(ofl)  # repository root: the license of the fonts and font sources
 
 
 if __name__ == "__main__":

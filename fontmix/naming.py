@@ -1,14 +1,13 @@
 """Family naming / metadata for the derived font."""
-FAMILY = "Elanor"
-PS_FAMILY = "Elanor"
+FAMILY = "Elanora"
+PS_FAMILY = "Elanora"
 VERSION = "1.000"
 YEAR = 2026
 
 COPYRIGHT = (
     'Copyright 2011 The Lora Project Authors (https://github.com/cyrealtype/Lora-Cyrillic), '
     'with Reserved Font Name "Lora". '
-    "Copyright 2020 The Brygada 1918 Project Authors (https://github.com/kosmynkab/Brygada-1918). "
-    f"Copyright {YEAR} The {FAMILY} Project Authors."
+    "Copyright 2020 The Brygada 1918 Project Authors (https://github.com/kosmynkab/Brygada-1918)."
 )
 DESIGNER = (
     f"{FAMILY}: derived from Lora (Olga Karpushina, Alexei Vanyashin / Cyreal) and "

@@ -43,7 +43,7 @@ def dump_a_ufo(M, path, mode, lora=None, bry=None):
     import ufoLib2
     lo, hi = M[400], M[700]
     ufo = ufoLib2.Font()
-    ufo.info.familyName = f"Elanor a-edit ({mode})"
+    ufo.info.familyName = f"Elanora a-edit ({mode})"
     ufo.info.styleName = "Bold"
     ufo.info.unitsPerEm = hi["head"].unitsPerEm
     ufo.info.ascender, ufo.info.descender = hi["hhea"].ascent, hi["hhea"].descent
@@ -248,7 +248,7 @@ def dump_figs_ufo(M, path, style, lora=None):
     import ufoLib2
     lo, hi = M[400], M[700]
     ufo = ufoLib2.Font()
-    ufo.info.familyName = f"Elanor figures-edit ({style})"
+    ufo.info.familyName = f"Elanora figures-edit ({style})"
     ufo.info.styleName = "Bold"
     ufo.info.unitsPerEm = hi["head"].unitsPerEm
     ufo.info.ascender, ufo.info.descender = hi["hhea"].ascent, hi["hhea"].descent

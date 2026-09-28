@@ -1,4 +1,4 @@
-"""Build the bold master of Brygada-derived glyphs as: Elanor Regular + Lora's own Regular->Bold
+"""Build the bold master of Brygada-derived glyphs as: Elanora Regular + Lora's own Regular->Bold
 movement, transferred point by point from the nearest matching spot on Lora's outline.
 
 Lora thickens hairlines as well as stems; Brygada keeps its hairlines thin. Transferring Lora's
@@ -108,7 +108,7 @@ def _loop_map(c, outl, on_tol=1.2, iou_min=0.55):
     if bi is None or best < iou_min:
         return None
     o = outl[bi]
-    # arc length along the (dense) Elanor contour polyline
+    # arc length along the (dense) Elanora contour polyline
     n = len(xy)
     seg = np.hypot(*np.diff(np.vstack([xy, xy[:1]]), axis=0).T)
     sp = np.r_[0, np.cumsum(seg[:-1])]

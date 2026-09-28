@@ -9,7 +9,7 @@
     <key>descender</key>
     <integer>-274</integer>
     <key>familyName</key>
-    <string>Perla figures-edit (italic)</string>
+    <string>Elanora figures-edit (italic)</string>
     <key>note</key>
     <string>Edit the bold figures (0-9 lining and .osf oldstyle). Keep every point: move points and handles only. Sharp inner corners are two points on top of each other: move each on its own. Grey glyphs are references and are not read back. Tabular, numerator, denominator, superior and inferior figures follow automatically.</string>
     <key>styleName</key>

@@ -15,6 +15,6 @@ for style in ("roman", "italic"):
     if os.path.exists(path) and not force:
         print("keeping", path, "(use --force to overwrite)")
         continue
-    env = dict(os.environ, PERLA_DUMP_FIGS="manual")
+    env = dict(os.environ, ELANORA_DUMP_FIGS="manual")
     subprocess.run([sys.executable, "build_font.py", style], env=env, check=True, stdout=subprocess.DEVNULL)
     print("wrote", path)

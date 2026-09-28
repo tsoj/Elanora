@@ -1,6 +1,7 @@
 [project]
 name = "fontmix"
 version = "0.1.0"
+license = "GPL-3.0-or-later"  # the build scripts; the fonts and font sources are OFL-1.1 (see OFL.txt)
 requires-python = ">=3.14"
 dependencies = [
     "fonttools[unicode,woff]>=4.66.0",

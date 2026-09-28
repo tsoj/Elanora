@@ -32,22 +32,22 @@ FIG_WEIGHTS = {"roman": {400: 400, 700: 400}, "italic": {400: 400, 700: 400}}  #
 FIG_EMB = {700: 17}
 ARCH_GLYPHS = ["n", "h", "m", "u", "b", "p", "d", "q", "hbar", "thorn", "dcroat", "dcaron"]
 ARCH_FACTOR = 1.0  # main: how far Lora's arches move toward Brygada's join heights
-# first entry = the Elanor build; further entries are extra variants (dist/fonts/versions).
-# Arch changes are retired (2026-09-28): Elanor keeps Lora's arches and bowls as they are
+# first entry = the Elanora build; further entries are extra variants (dist/fonts/versions).
+# Arch changes are retired (2026-09-28): Elanora keeps Lora's arches and bowls as they are
 # ("classic"); "main" (smooth arch morph) and "literal" (spliced Brygada arches) remain available.
 VARIANTS = {"roman": ["classic"], "italic": ["main"]}
-# bold a (and æ, ª): "brygada" = Brygada's own bold; "transfer" = Elanor Regular + Lora's
+# bold a (and æ, ª): "brygada" = Brygada's own bold; "transfer" = Elanora Regular + Lora's
 # Regular->Bold movement, like most other letters. A hand-edited version of the chosen one is
 # read from manual/a-bold-<mode>.ufo when that file exists (see tools/export_bold_a.py).
-BOLD_A_MODE = os.environ.get("PERLA_BOLD_A", "brygada")
+BOLD_A_MODE = os.environ.get("ELANORA_BOLD_A", "brygada")
 
 
 def manual_figs(M, style, src):
-    """Hand-edited bold figures: export with PERLA_DUMP_FIGS=<dir>, read back from
+    """Hand-edited bold figures: export with ELANORA_DUMP_FIGS=<dir>, read back from
     manual/figures-bold-<style>.ufo when that file exists (tools/export_bold_figures.py)."""
     from fontmix import manual
-    if os.environ.get("PERLA_DUMP_FIGS"):
-        manual.dump_figs_ufo(M, os.path.join(os.environ["PERLA_DUMP_FIGS"], f"figures-bold-{style}.ufo"),
+    if os.environ.get("ELANORA_DUMP_FIGS"):
+        manual.dump_figs_ufo(M, os.path.join(os.environ["ELANORA_DUMP_FIGS"], f"figures-bold-{style}.ufo"),
                              style, lora=load_masters(src)[700])
     elif os.path.exists(f"manual/figures-bold-{style}.ufo"):
         print(f"hand-edited bold figures ({style}):", manual.apply_manual_figs(M, f"manual/figures-bold-{style}.ufo"))
@@ -130,10 +130,10 @@ def build(style, log=None, variant="main", out=None):
             xfer += FIGS + [f + ".tf" for f in FIGS]
         stage_bold_transfer(M, L_ref, xfer, log=log, nearest={"S", "z", "Z", "Q", "a", "ae", "ordfeminine"})
         from fontmix import manual
-        if os.environ.get("PERLA_DUMP_A"):
+        if os.environ.get("ELANORA_DUMP_A"):
             from fontmix.transplant import bry_instance as _bi
             _B = _bi(BRYG[style], 660)
-            manual.dump_a_ufo(M, os.environ["PERLA_DUMP_A"], BOLD_A_MODE, lora=load_masters(src)[700],
+            manual.dump_a_ufo(M, os.environ["ELANORA_DUMP_A"], BOLD_A_MODE, lora=load_masters(src)[700],
                               bry=(_bc(_B, "a", 500 / 460), round(_B["hmtx"]["a"][0] * 500 / 460)))
         elif os.path.exists(f"manual/a-bold-{BOLD_A_MODE}.ufo"):
             print("hand-edited bold a:", manual.apply_manual_a(M, f"manual/a-bold-{BOLD_A_MODE}.ufo"))

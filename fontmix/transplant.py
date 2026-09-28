@@ -1,4 +1,4 @@
-"""Bring individual Brygada letters into the Lora-based masters: scaled to Elanor's metrics,
+"""Bring individual Brygada letters into the Lora-based masters: scaled to Elanora's metrics,
 weight-matched per master through Brygada's weight axis, with accents and anchors re-derived."""
 import unicodedata
 from functools import lru_cache

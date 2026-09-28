@@ -1,10 +1,10 @@
-<title>Elanor</title>
+<title>Elanora</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-@font-face{font-family:"Elanor";src:url(data:font/woff2;base64,{{elanor-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
-@font-face{font-family:"Elanor";src:url(data:font/woff2;base64,{{elanor-i}}) format("woff2");font-weight:400 700;font-style:italic;font-display:block}
+@font-face{font-family:"Elanora";src:url(data:font/woff2;base64,{{elanora-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
+@font-face{font-family:"Elanora";src:url(data:font/woff2;base64,{{elanora-i}}) format("woff2");font-weight:400 700;font-style:italic;font-display:block}
 @font-face{font-family:"LoraRef";src:url(data:font/woff2;base64,{{lora-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
 @font-face{font-family:"LoraRef";src:url(data:font/woff2;base64,{{lora-i}}) format("woff2");font-weight:400 700;font-style:italic;font-display:block}
 @font-face{font-family:"BrygadaRef";src:url(data:font/woff2;base64,{{bryg-r}}) format("woff2");font-weight:400 700;font-style:normal;font-display:block}
@@ -13,21 +13,21 @@
 :root{
   --paper:#F5F6F7; --panel:#FFFFFF; --ink:#15171C; --muted:#5E6470; --faint:#8A909B;
   --rule:#D9DCE1; --accent:#2F3E9E; --accent-soft:#E4E7F6;
-  --elanor:#B9C0DE; --lora:#D0343A; --bryg:#0F8585;
+  --elanora:#B9C0DE; --lora:#D0343A; --bryg:#0F8585;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --serif:"Elanor",Georgia,"Times New Roman",serif;
+  --serif:"Elanora",Georgia,"Times New Roman",serif;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --paper:#111317; --panel:#171A1F; --ink:#E8E9ED; --muted:#9BA1AD; --faint:#6F7580;
     --rule:#2A2E36; --accent:#A3ADF4; --accent-soft:#1E2342;
-    --elanor:#3B4266; --lora:#FF6B6F; --bryg:#3CC7C0; color-scheme:dark;
+    --elanora:#3B4266; --lora:#FF6B6F; --bryg:#3CC7C0; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --paper:#111317; --panel:#171A1F; --ink:#E8E9ED; --muted:#9BA1AD; --faint:#6F7580;
   --rule:#2A2E36; --accent:#A3ADF4; --accent-soft:#1E2342;
-  --elanor:#3B4266; --lora:#FF6B6F; --bryg:#3CC7C0; color-scheme:dark;
+  --elanora:#3B4266; --lora:#FF6B6F; --bryg:#3CC7C0; color-scheme:dark;
 }
 
 *{box-sizing:border-box}
@@ -62,7 +62,7 @@ header .sub{font-size:clamp(19px,2.2vw,23px);max-width:44ch;line-height:1.4}
 .toggle:has(input:checked){color:var(--ink)}
 .toggle:has(input:not(:checked)) .key{opacity:.25}
 .key{display:inline-block;width:22px;height:0;border-top:2px solid}
-.key.elanor{border-top:9px solid var(--elanor);border-radius:1px}
+.key.elanora{border-top:9px solid var(--elanora);border-radius:1px}
 .key.lora{border-color:var(--lora)}
 .key.bryg{border-color:var(--bryg);border-top-style:dashed}
 
@@ -76,11 +76,11 @@ header .sub{font-size:clamp(19px,2.2vw,23px);max-width:44ch;line-height:1.4}
 .cell svg{display:block;width:100%;height:auto}
 .cell .cap{font-family:var(--mono);font-size:11px;color:var(--faint);padding:0 10px 8px;letter-spacing:.04em}
 .cell text{font-size:150px}
-.cell .t-elanor{fill:var(--elanor)}
+.cell .t-elanora{fill:var(--elanora)}
 .cell .t-lora{fill:none;stroke:var(--lora);stroke-width:1.6px}
 .cell .t-bryg{fill:none;stroke:var(--bryg);stroke-width:1.6px;stroke-dasharray:5 4}
 .cell .base{stroke:var(--rule);stroke-width:1px}
-.hide-lora .t-lora,.hide-bryg .t-bryg,.hide-elanor .t-elanor{display:none}
+.hide-lora .t-lora,.hide-bryg .t-bryg,.hide-elanora .t-elanora{display:none}
 
 /* tester */
 .tester{background:var(--panel);border:1px solid var(--rule);border-radius:6px;display:flex;flex-direction:column}
@@ -138,7 +138,7 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
 <div class="wrap">
   <header>
     <span class="label">A text serif · Lora × Brygada 1918</span>
-    <h1>Elanor</h1>
+    <h1>Elanora</h1>
     <p class="sub">Lora with Brygada 1918’s ball terminals, a handful of its letters, and its figures.</p>
     <div class="meta">
       <span>roman &amp; italic</span>
@@ -153,7 +153,7 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
   <section aria-labelledby="changes">
     <div class="sechead">
       <span class="label">What changed</span>
-      <h2 id="changes">Elanor over Lora and Brygada</h2>
+      <h2 id="changes">Elanora over Lora and Brygada</h2>
       <p class="lede">Every letter not shown here is Lora’s. Brygada is drawn at Lora’s x-height (scaled 500/460).</p>
     </div>
     <div class="controls" id="cmp-controls">
@@ -161,7 +161,7 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
         <button type="button" data-w="400" aria-pressed="true">Regular</button>
         <button type="button" data-w="700" aria-pressed="false">Bold</button>
       </div>
-      <label class="toggle"><input type="checkbox" id="show-elanor" checked><span class="key elanor"></span>Elanor</label>
+      <label class="toggle"><input type="checkbox" id="show-elanora" checked><span class="key elanora"></span>Elanora</label>
       <label class="toggle"><input type="checkbox" id="show-lora" checked><span class="key lora"></span>Lora</label>
       <label class="toggle"><input type="checkbox" id="show-bryg"><span class="key bryg"></span>Brygada</label>
     </div>
@@ -187,7 +187,7 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
       </div>
     </div>
     <div class="sbs" id="sbs">
-      <article class="cur"><span class="who">Elanor</span><div class="body" data-face=""></div></article>
+      <article class="cur"><span class="who">Elanora</span><div class="body" data-face=""></div></article>
       <article><span class="who">Lora</span><div class="body f-lora" data-face="lora"></div></article>
       <article><span class="who">Brygada 1918</span><div class="body f-bryg" data-face="bryg"></div></article>
     </div>
@@ -259,7 +259,7 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
     <div class="text">
       <article>
         <h3>A serif made from two</h3>
-        <p>Elanor keeps Lora’s generous x-height, its brushed curves and the wedge serifs that keep lines moving on a screen. <em>Brygada 1918 lends it the ball terminals that hang from c, f, j, r and y like drops of ink</em>, a few of its letters, and <strong>its figures: 1234567890</strong>.</p>
+        <p>Elanora keeps Lora’s generous x-height, its brushed curves and the wedge serifs that keep lines moving on a screen. <em>Brygada 1918 lends it the ball terminals that hang from c, f, j, r and y like drops of ink</em>, a few of its letters, and <strong>its figures: 1234567890</strong>.</p>
       </article>
       <article lang="pl">
         <h3>Pan Tadeusz, 1834</h3>
@@ -301,11 +301,11 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
     g.glyphs.forEach(function(ch){
       var cell=document.createElement('div'); cell.className='cell';
       var svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 170 214');
-      svg.setAttribute('role','img'); svg.setAttribute('aria-label',ch+': Elanor over Lora and Brygada');
+      svg.setAttribute('role','img'); svg.setAttribute('aria-label',ch+': Elanora over Lora and Brygada');
       var base=document.createElementNS(NS,'line'); base.setAttribute('class','base');
       base.setAttribute('x1','0'); base.setAttribute('x2','170'); base.setAttribute('y1','172'); base.setAttribute('y2','172');
       svg.appendChild(base);
-      [['t-elanor','Elanor',1],['t-bryg','BrygadaRef',BRY],['t-lora','LoraRef',1]].forEach(function(l){
+      [['t-elanora','Elanora',1],['t-bryg','BrygadaRef',BRY],['t-lora','LoraRef',1]].forEach(function(l){
         var t=document.createElementNS(NS,'text');
         t.setAttribute('class',l[0]); t.setAttribute('x','85'); t.setAttribute('y','172');
         t.setAttribute('text-anchor','middle');
@@ -324,7 +324,7 @@ footer code{font-family:var(--mono);font-size:13px;color:var(--ink);background:v
   }
   document.querySelectorAll('[data-w]').forEach(function(b){b.addEventListener('click',function(){setW(b.dataset.w)})});
   setW('400');
-  [['show-elanor','hide-elanor'],['show-lora','hide-lora'],['show-bryg','hide-bryg']].forEach(function(p){
+  [['show-elanora','hide-elanora'],['show-lora','hide-lora'],['show-bryg','hide-bryg']].forEach(function(p){
     var i=document.getElementById(p[0]);
     i.addEventListener('change',function(){host.classList.toggle(p[1],!i.checked)});
   });

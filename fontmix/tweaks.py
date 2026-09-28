@@ -120,7 +120,7 @@ def bracket_feet(M, names, size_v=40, size_h=26, zone=120, ref_height=700):
 
 
 def q_with_brygada_tail(M, bry_path, weights, cap_scale):
-    """Elanor's Q = Elanor's O + Brygada's calligraphic tail, fitted to the O."""
+    """Elanora's Q = Elanora's O + Brygada's calligraphic tail, fitted to the O."""
     for w, f in M.items():
         glyf, hmtx = f["glyf"], f["hmtx"]
         B = bry_instance(bry_path, weights[w])
@@ -331,7 +331,7 @@ def _nearest_on(c, P):
 
 def italic_y_from_u_g(M, y_cut=240, u_crotch=(397, 216), g_crotch=(358, 215)):
     """Brygada-shaped italic y in Lora's hand: Lora's italic u (entry stroke, bowl, right stem)
-    with the descender and ball of Elanor's italic g grafted onto the right stem."""
+    with the descender and ball of Elanora's italic g grafted onto the right stem."""
     from .transplant import base_anchors
     first = next(iter(M))
     idx = {}
@@ -531,7 +531,7 @@ def graft_lora_feet(M, M_lora, style="roman", donors=FOOT_DONORS):
     return report
 
 
-# whole-arm joins, calibrated on Brygada (offsets at Elanor's scale, Regular): (inner, outer)
+# whole-arm joins, calibrated on Brygada (offsets at Elanora's scale, Regular): (inner, outer)
 ARM_OFFSETS = {"top_n": (60, 10), "bot_u": (60, 45), "top_b": (70, 15), "bot_b": (45, 8),
                "top_d": (70, 15), "bot_d": (50, 25)}
 ARMS = {
