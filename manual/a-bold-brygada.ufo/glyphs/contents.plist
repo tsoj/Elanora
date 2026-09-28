@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>a</key>
+    <string>a.glif</string>
+    <key>a.brygada-bold</key>
+    <string>a.brygada-bold.glif</string>
+    <key>a.lora-bold</key>
+    <string>a.lora-bold.glif</string>
+    <key>a.regular</key>
+    <string>a.regular.glif</string>
+    <key>ae</key>
+    <string>ae.glif</string>
+    <key>ordfeminine</key>
+    <string>ordfeminine.glif</string>
+  </dict>
+</plist>

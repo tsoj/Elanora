@@ -1,0 +1,8 @@
+
+@GDEF_Simple = [\a \a.brygada-bold \a.lora-bold \a.regular \ae \ordfeminine ];
+
+table GDEF {
+  GlyphClassDef @GDEF_Simple, , , ;
+
+} GDEF;
+

@@ -1,0 +1,12 @@
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
+
+# intermediate build output (rebuilt by build_font.py)
+out/
+
+# editor / OS
+.DS_Store
+*~
+*.sfd-*
