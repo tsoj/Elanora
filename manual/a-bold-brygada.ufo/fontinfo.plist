@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
-    <key>familyName</key>
-    <string>Elanora a-edit (brygada)</string>
-    <key>styleName</key>
-    <string>Bold</string>
-    <key>unitsPerEm</key>
-    <integer>1000</integer>
-    <key>capHeight</key>
-    <integer>700</integer>
-    <key>xHeight</key>
-    <integer>500</integer>
     <key>ascender</key>
     <integer>1006</integer>
+    <key>capHeight</key>
+    <integer>700</integer>
     <key>descender</key>
     <integer>-274</integer>
+    <key>familyName</key>
+    <string>Elanora a-edit (brygada)</string>
+    <key>guidelines</key>
+    <array/>
     <key>italicAngle</key>
-    <real>0</real>
+    <real>0.0</real>
     <key>note</key>
     <string>Edit glyph 'a' (bold master). Keep every point: move points and handles, but do not add, delete or convert them. Other glyphs are references only and are not read back.</string>
     <key>openTypeHeadCreated</key>
@@ -28,12 +24,6 @@
     <integer>-16</integer>
     <key>openTypeHheaLineGap</key>
     <integer>0</integer>
-    <key>openTypeOS2WidthClass</key>
-    <integer>5</integer>
-    <key>openTypeOS2WeightClass</key>
-    <integer>400</integer>
-    <key>openTypeOS2VendorID</key>
-    <string></string>
     <key>openTypeOS2FamilyClass</key>
     <array>
       <integer>0</integer>
@@ -47,6 +37,12 @@
     <integer>-200</integer>
     <key>openTypeOS2TypoLineGap</key>
     <integer>0</integer>
+    <key>openTypeOS2VendorID</key>
+    <string></string>
+    <key>openTypeOS2WeightClass</key>
+    <integer>400</integer>
+    <key>openTypeOS2WidthClass</key>
+    <integer>5</integer>
     <key>openTypeOS2WinAscent</key>
     <integer>671</integer>
     <key>openTypeOS2WinDescent</key>
@@ -55,15 +51,19 @@
     <string>Elanora a-edit (brygada)-Bold</string>
     <key>postscriptFullName</key>
     <string>Elanora a-edit (brygada) Bold</string>
-    <key>postscriptWeightName</key>
-    <string>Regular</string>
-    <key>postscriptUnderlineThickness</key>
-    <integer>0</integer>
-    <key>postscriptUnderlinePosition</key>
-    <integer>0</integer>
     <key>postscriptIsFixedPitch</key>
     <false/>
-    <key>guidelines</key>
-    <array/>
+    <key>postscriptUnderlinePosition</key>
+    <integer>0</integer>
+    <key>postscriptUnderlineThickness</key>
+    <integer>0</integer>
+    <key>postscriptWeightName</key>
+    <string>Regular</string>
+    <key>styleName</key>
+    <string>Bold</string>
+    <key>unitsPerEm</key>
+    <integer>1000</integer>
+    <key>xHeight</key>
+    <integer>500</integer>
   </dict>
 </plist>

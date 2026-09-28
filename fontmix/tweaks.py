@@ -1443,3 +1443,63 @@ def remove_gsub_feature(font, tag):
         for lr in sr.Script.LangSysRecord:
             fix(lr.LangSys)
     return len(drop)
+
+
+def lower_top_hump(font, name, x_from, x_to, target_top):
+    """Lower the right-hand part of a glyph (points right of x_to fully, blended in over
+    x_from..x_to) so its highest point reaches target_top, by scaling y about the baseline.
+    Used for the bold æ, whose e half (Brygada's bold) overshoots 12 units above Lora's e while
+    its a half follows the hand-edited a. One master; returns the scale applied."""
+    from .geom import sample
+    cs = glyph_contours(font["glyf"], name)
+    top = max(float(q[1]) for c in cs for q in sample(c, 16) if q[0] >= x_to)
+    if top <= target_top:
+        return 1.0
+    k = target_top / top
+    for c in cs:
+        for p in c:
+            w = _smooth((p[0] - x_from) / (x_to - x_from))
+            p[1] = p[1] * (1 - (1 - k) * w)
+    set_glyph_contours(font["glyf"], name, cs)
+    font["hmtx"][name] = (font["hmtx"][name][0], font["glyf"][name].xMin)
+    return k
+
+
+def ae_with_lora_e(M, L, top=(48, 32), bottom=(11, 55), blend=90.0):
+    """Give the æ Lora's e (the same e as the letter e) instead of Brygada's.
+
+    In both æ's the a half and the e half meet at two sharp notches (top and bottom), which are
+    on-curve corners of the outer contour. The new outer contour is our a half (bottom notch ->
+    a -> top notch; it carries the hand-edited a) followed by Lora's e half (top notch -> e ->
+    bottom notch, index ranges in `top` / `bottom` = (ours, Lora's)); Lora's separate e-eye
+    contour is added. Lora's e is only moved sideways (never vertically, so it keeps its exact
+    height); the ends of our a half are blended onto Lora's notch points. The advance keeps
+    Lora's right sidebearing. Every master gets the same point structure.
+    Returns {master: (dx, xMax, advance)}."""
+    from .splice import blend_ends
+    rep = {}
+    for w, f in M.items():
+        glyf, hmtx = f["glyf"], f["hmtx"]
+        ours = glyph_contours(glyf, "ae")
+        lora = glyph_contours(L[w]["glyf"], "ae")
+        assert [len(c) for c in lora] == [58, 15, 9] and len(ours) == 2 and len(ours[0]) == 68, "unexpected æ structure"
+        oc, lc = ours[0], lora[0]
+        it, jt = top
+        ib, jb = bottom
+        for c, i in ((oc, it), (oc, ib), (lc, jt), (lc, jb)):
+            assert c[i][2], "notch is not an on-curve point"
+        dx = ((oc[it][0] + oc[ib][0]) - (lc[jt][0] + lc[jb][0])) / 2
+        e_sec = [[p[0] + dx, p[1], p[2]] for p in lc[jt:jb + 1]]        # top notch .. bottom notch
+        a_sec = [list(p) for p in oc[ib:it + 1]]                          # bottom notch .. top notch
+        blend_ends(a_sec, e_sec[-1][:2], e_sec[0][:2], blend)             # a half onto Lora's notches
+        outer = a_sec + e_sec[1:-1]
+        eye = [[p[0] + dx, p[1], p[2]] for p in lora[2]]
+        set_glyph_contours(glyf, "ae", [outer, ours[1], eye])
+        g = glyf["ae"]
+        lg = L[w]["glyf"]["ae"]
+        lg.recalcBounds(L[w]["glyf"])
+        rsb = L[w]["hmtx"]["ae"][0] - lg.xMax
+        adv = int(round(g.xMax + rsb))
+        hmtx["ae"] = (adv, g.xMin)
+        rep[w] = (round(dx, 1), g.xMax, adv)
+    return rep

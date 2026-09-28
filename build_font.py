@@ -137,6 +137,9 @@ def build(style, log=None, variant="main", out=None):
                               bry=(_bc(_B, "a", 500 / 460), round(_B["hmtx"]["a"][0] * 500 / 460)))
         elif os.path.exists(f"manual/a-bold-{BOLD_A_MODE}.ufo"):
             print("hand-edited bold a:", manual.apply_manual_a(M, f"manual/a-bold-{BOLD_A_MODE}.ufo"))
+        # æ: our a half (with the hand-edited a) + Lora's e, the same e as the letter e
+        from fontmix.tweaks import ae_with_lora_e
+        print("ae with Lora's e (dx, xMax, advance):", ae_with_lora_e(M, L_ref))
         if variant == "literal":
             # spliced Brygada arches: repair the bold joins the Lora reg->bold transfer leaves thin
             from fontmix.tweaks import uniform_joins, restore_top_join
