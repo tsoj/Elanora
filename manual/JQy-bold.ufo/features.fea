@@ -1,0 +1,9 @@
+
+@GDEF_Simple = [\J \Q \y \J.lora-bold \J.regular \Q.lora-bold \Q.regular 
+	\y.lora-bold \y.regular ];
+
+table GDEF {
+  GlyphClassDef @GDEF_Simple, , , ;
+
+} GDEF;
+

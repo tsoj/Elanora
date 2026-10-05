@@ -72,14 +72,18 @@ a's follow as composites. The intermediate weights interpolate automatically. It
 the points moved (`hand-edited bold a: …`) or refuses an incompatible file with an explanation.
 `uv run python tools/export_bold_a.py --force` re-exports fresh, unedited files.
 
-## Hand-editing the bold f
+## Hand-editing other bold glyphs (f, ſ, J, Q, y)
 
-`manual/f-bold.ufo` holds the bold f (the regular f is in the background layer, `f.regular` and
-`f.lora-bold` are grey references). Edit glyph `f` the same way as the bold a: move points and
-handles, never add, delete or convert them; the advance width may change. Save as UFO *over the
-same file* (some editors save a copy under a new name) and rebuild; the build prints
-`hand-edited bold f: …`. The roman `fi`, `fl` and `longs` have their own outlines and do not
-follow. `uv run python tools/export_bold_f.py --force` re-exports a fresh file.
+`manual/f-bold.ufo` (bold f) and `manual/JQy-bold.ufo` (bold J, Q, y) hold the bold glyphs, with
+the regular glyph in the background layer and `<name>.regular` / `<name>.lora-bold` as grey
+references. Edit them the same way as the bold a: move points and handles, never add, delete or
+convert them; the advance width may change. Save as UFO *over the same file* (some editors save a
+copy under a new name) and rebuild; the build prints `hand-edited bold <glyph>: …`. The edit of f is
+carried over to ſ (points sitting on a moved point move with it, others like the nearby ones);
+accented J, y and Cyrillic look-alikes are composites and follow. The roman `fi` and `fl` have their
+own outlines and do not follow. The files and their follow-ups are listed in `MANUAL_GLYPHS` in
+`build_font.py`; `uv run python tools/export_bold_glyphs.py manual/JQy-bold.ufo J,Q,y --force`
+re-exports fresh files.
 
 ## Hand-editing the bold figures
 

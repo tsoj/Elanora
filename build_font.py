@@ -40,6 +40,9 @@ VARIANTS = {"roman": ["classic"], "italic": ["main"]}
 # Regular->Bold movement, like most other letters. A hand-edited version of the chosen one is
 # read from manual/a-bold-<mode>.ufo when that file exists (see tools/export_bold_a.py).
 BOLD_A_MODE = os.environ.get("ELANORA_BOLD_A", "brygada")
+# hand-edited bold glyphs: (UFO, glyph names, {glyph: glyphs that follow its edit})
+MANUAL_GLYPHS = [("manual/f-bold.ufo", ["f"], {"f": ["longs"]}),
+                 ("manual/JQy-bold.ufo", ["J", "Q", "y"], {})]
 
 
 def manual_figs(M, style, src):
@@ -137,11 +140,16 @@ def build(style, log=None, variant="main", out=None):
                               bry=(_bc(_B, "a", 500 / 460), round(_B["hmtx"]["a"][0] * 500 / 460)))
         elif os.path.exists(f"manual/a-bold-{BOLD_A_MODE}.ufo"):
             print("hand-edited bold a:", manual.apply_manual_a(M, f"manual/a-bold-{BOLD_A_MODE}.ufo"))
-        # hand-edited bold f: export with ELANORA_DUMP_F=<path>, read back from manual/f-bold.ufo
-        if os.environ.get("ELANORA_DUMP_F"):
-            manual.dump_glyph_ufo(M, os.environ["ELANORA_DUMP_F"], "f", lora=load_masters(src)[700])
-        elif os.path.exists("manual/f-bold.ufo"):
-            print("hand-edited bold f:", manual.apply_manual_glyph(M, "manual/f-bold.ufo", "f"))
+        # hand-edited bold glyphs: export with ELANORA_DUMP_GLYPHS=<ufo>:<names>, read back from
+        # manual/<file>.ufo (tools/export_bold_glyphs.py). The f edit is carried over to ſ.
+        if os.environ.get("ELANORA_DUMP_GLYPHS"):
+            _path, _names = os.environ["ELANORA_DUMP_GLYPHS"].split(":")
+            manual.dump_glyph_ufo(M, _path, _names.split(","), lora=load_masters(src)[700])
+        else:
+            for _path, _names, _follow in MANUAL_GLYPHS:
+                if os.path.exists(_path):
+                    for _n in _names:
+                        print(f"hand-edited bold {_n}:", manual.apply_manual_glyph(M, _path, _n, follow=_follow.get(_n, ())))
         # æ: our a half (with the hand-edited a) + Lora's e, the same e as the letter e
         from fontmix.tweaks import ae_with_lora_e
         print("ae with Lora's e (dx, xMax, advance):", ae_with_lora_e(M, L_ref))

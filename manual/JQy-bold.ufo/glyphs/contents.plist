@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>J</key>
+    <string>J_.glif</string>
+    <key>Q</key>
+    <string>Q_.glif</string>
+    <key>y</key>
+    <string>y.glif</string>
+    <key>J.lora-bold</key>
+    <string>J_.lora-bold.glif</string>
+    <key>J.regular</key>
+    <string>J_.regular.glif</string>
+    <key>Q.lora-bold</key>
+    <string>Q_.lora-bold.glif</string>
+    <key>Q.regular</key>
+    <string>Q_.regular.glif</string>
+    <key>y.lora-bold</key>
+    <string>y.lora-bold.glif</string>
+    <key>y.regular</key>
+    <string>y.regular.glif</string>
+  </dict>
+</plist>

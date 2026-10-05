@@ -226,42 +226,69 @@ def apply_manual_a(M, path, log=None):
 
 
 # ------------------------------------------------------------------ single bold glyph (f)
-def dump_glyph_ufo(M, path, name, lora=None):
-    """Write the current bold `name` (regular in the background layer, Lora's bold as a grey
-    reference) to a UFO for hand editing."""
+def dump_glyph_ufo(M, path, names, lora=None):
+    """Write the current bold glyph(s) `names` (regular in the background layer, Lora's bold as a
+    grey reference) to a UFO for hand editing."""
     import ufoLib2
+    names = [names] if isinstance(names, str) else list(names)
     lo, hi = M[400], M[700]
     ufo = ufoLib2.Font()
-    ufo.info.familyName = f"Elanora {name}-edit"
+    ufo.info.familyName = "Elanora {}-edit".format(" ".join(names))
     ufo.info.styleName = "Bold"
     ufo.info.unitsPerEm = hi["head"].unitsPerEm
     ufo.info.ascender, ufo.info.descender = hi["hhea"].ascent, hi["hhea"].descent
     ufo.info.xHeight, ufo.info.capHeight = 500, 700
-    ufo.info.note = REF_NOTE.replace("'a'", f"'{name}'")
+    ufo.info.note = ("Edit the bold glyphs " + ", ".join(names) + ". Keep every point: move points and "
+                     "handles, but do not add, delete or convert them. Grey glyphs are references and "
+                     "are not read back.")
     cmap = {v: k for k, v in hi.getBestCmap().items()}
-    g = ufo.newGlyph(name)
-    _glyf_to_ufo(g, hi, name)
-    g.width = hi["hmtx"][name][0]
-    if name in cmap:
-        g.unicodes = [cmap[name]]
     bg = ufo.newLayer("public.background")
-    _glyf_to_ufo(bg.newGlyph(name), lo, name)
-    bg[name].width = lo["hmtx"][name][0]
-    order = [name]
-    refs = [(f"{name}.regular", lo)] + ([(f"{name}.lora-bold", lora)] if lora is not None else [])
-    for n, f in refs:
-        r = ufo.newGlyph(n)
-        _glyf_to_ufo(r, f, name)
-        r.width = f["hmtx"][name][0]
-        r.markColor = "0.6,0.6,0.6,1"
-        order.append(n)
+    order = []
+    for name in names:
+        g = ufo.newGlyph(name)
+        _glyf_to_ufo(g, hi, name)
+        g.width = hi["hmtx"][name][0]
+        if name in cmap:
+            g.unicodes = [cmap[name]]
+        _glyf_to_ufo(bg.newGlyph(name), lo, name)
+        bg[name].width = lo["hmtx"][name][0]
+        order.append(name)
+    for name in names:
+        refs = [(f"{name}.regular", lo)] + ([(f"{name}.lora-bold", lora)] if lora is not None else [])
+        for n, f in refs:
+            r = ufo.newGlyph(n)
+            _glyf_to_ufo(r, f, name)
+            r.width = f["hmtx"][name][0]
+            r.markColor = "0.6,0.6,0.6,1"
+            order.append(n)
     ufo.glyphOrder = order
     ufo.save(path, overwrite=True)
     return path
 
 
-def apply_manual_glyph(M, path, name):
-    """Replace the bold `name` by the hand-edited one (same point structure as the regular)."""
+def _follow(targets, src_pts, deltas, radius=40.0):
+    """Carry an edit to a glyph that shares part of the outline: a point sitting on a moved point
+    (within 1.5 units, each source point used once) moves exactly like it, the others like the
+    nearby source points (`_carry`)."""
+    pts = [p for c in targets for p in c]
+    pairs = sorted((float(np.hypot(*(src_pts[j] - np.array(p[:2])))), i, j)
+                   for i, p in enumerate(pts) for j in range(len(src_pts))
+                   if abs(src_pts[j][0] - p[0]) < 1.5 and abs(src_pts[j][1] - p[1]) < 1.5)
+    used_i, used_j, moved = set(), set(), 0.0
+    for d, i, j in pairs:
+        if i in used_i or j in used_j:
+            continue
+        used_i.add(i), used_j.add(j)
+        pts[i][0] += deltas[j][0]
+        pts[i][1] += deltas[j][1]
+        moved = max(moved, float(np.hypot(*deltas[j])))
+    rest = [[p] for i, p in enumerate(pts) if i not in used_i]
+    return max(moved, _carry(rest, src_pts, deltas, radius))
+
+
+def apply_manual_glyph(M, path, name, follow=()):
+    """Replace the bold `name` by the hand-edited one (same point structure as the regular).
+    `follow`: other glyphs that share part of the outline; the edit is carried over to them."""
     from .geom import explicitize
     hi = M[700]
     glyf, hmtx = hi["glyf"], hi["hmtx"]
@@ -276,10 +303,17 @@ def apply_manual_glyph(M, path, name):
             new = _align(base, [explicitize(c) for c in new])
         except SystemExit as e:
             raise SystemExit(f"{path}, glyph '{name}': {e}")
-    D = np.array([p[:2] for c in new for p in c]) - np.array([p[:2] for c in base for p in c])
+    B = np.array([p[:2] for c in base for p in c])
+    D = np.array([p[:2] for c in new for p in c]) - B
     set_glyph_contours(glyf, name, new)
     hmtx[name] = (int(round(adv)), glyf[name].xMin)
-    return {"max move": round(float(np.hypot(*D.T).max()), 1), "advance": int(round(adv))}
+    rep = {"max move": round(float(np.hypot(*D.T).max()), 1), "advance": int(round(adv))}
+    for t in follow:
+        cs = glyph_contours(glyf, t)
+        rep[t] = round(_follow(cs, B, D), 1)
+        set_glyph_contours(glyf, t, cs)
+        hmtx[t] = (hmtx[t][0], glyf[t].xMin)
+    return rep
 
 
 # ------------------------------------------------------------------ bold figures
