@@ -137,6 +137,11 @@ def build(style, log=None, variant="main", out=None):
                               bry=(_bc(_B, "a", 500 / 460), round(_B["hmtx"]["a"][0] * 500 / 460)))
         elif os.path.exists(f"manual/a-bold-{BOLD_A_MODE}.ufo"):
             print("hand-edited bold a:", manual.apply_manual_a(M, f"manual/a-bold-{BOLD_A_MODE}.ufo"))
+        # hand-edited bold f: export with ELANORA_DUMP_F=<path>, read back from manual/f-bold.ufo
+        if os.environ.get("ELANORA_DUMP_F"):
+            manual.dump_glyph_ufo(M, os.environ["ELANORA_DUMP_F"], "f", lora=load_masters(src)[700])
+        elif os.path.exists("manual/f-bold.ufo"):
+            print("hand-edited bold f:", manual.apply_manual_glyph(M, "manual/f-bold.ufo", "f"))
         # æ: our a half (with the hand-edited a) + Lora's e, the same e as the letter e
         from fontmix.tweaks import ae_with_lora_e
         print("ae with Lora's e (dx, xMax, advance):", ae_with_lora_e(M, L_ref))

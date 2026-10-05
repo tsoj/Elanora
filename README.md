@@ -72,6 +72,15 @@ a's follow as composites. The intermediate weights interpolate automatically. It
 the points moved (`hand-edited bold a: …`) or refuses an incompatible file with an explanation.
 `uv run python tools/export_bold_a.py --force` re-exports fresh, unedited files.
 
+## Hand-editing the bold f
+
+`manual/f-bold.ufo` holds the bold f (the regular f is in the background layer, `f.regular` and
+`f.lora-bold` are grey references). Edit glyph `f` the same way as the bold a: move points and
+handles, never add, delete or convert them; the advance width may change. Save as UFO *over the
+same file* (some editors save a copy under a new name) and rebuild; the build prints
+`hand-edited bold f: …`. The roman `fi`, `fl` and `longs` have their own outlines and do not
+follow. `uv run python tools/export_bold_f.py --force` re-exports a fresh file.
+
 ## Hand-editing the bold figures
 
 `manual/figures-bold-roman.ufo` and `manual/figures-bold-italic.ufo` hold the bold lining (0–9)

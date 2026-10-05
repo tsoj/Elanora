@@ -1,0 +1,8 @@
+
+@GDEF_Simple = [\f \f.lora-bold \f.regular ];
+
+table GDEF {
+  GlyphClassDef @GDEF_Simple, , , ;
+
+} GDEF;
+

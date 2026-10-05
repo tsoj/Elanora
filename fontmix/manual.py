@@ -225,6 +225,63 @@ def apply_manual_a(M, path, log=None):
     return rep
 
 
+# ------------------------------------------------------------------ single bold glyph (f)
+def dump_glyph_ufo(M, path, name, lora=None):
+    """Write the current bold `name` (regular in the background layer, Lora's bold as a grey
+    reference) to a UFO for hand editing."""
+    import ufoLib2
+    lo, hi = M[400], M[700]
+    ufo = ufoLib2.Font()
+    ufo.info.familyName = f"Elanora {name}-edit"
+    ufo.info.styleName = "Bold"
+    ufo.info.unitsPerEm = hi["head"].unitsPerEm
+    ufo.info.ascender, ufo.info.descender = hi["hhea"].ascent, hi["hhea"].descent
+    ufo.info.xHeight, ufo.info.capHeight = 500, 700
+    ufo.info.note = REF_NOTE.replace("'a'", f"'{name}'")
+    cmap = {v: k for k, v in hi.getBestCmap().items()}
+    g = ufo.newGlyph(name)
+    _glyf_to_ufo(g, hi, name)
+    g.width = hi["hmtx"][name][0]
+    if name in cmap:
+        g.unicodes = [cmap[name]]
+    bg = ufo.newLayer("public.background")
+    _glyf_to_ufo(bg.newGlyph(name), lo, name)
+    bg[name].width = lo["hmtx"][name][0]
+    order = [name]
+    refs = [(f"{name}.regular", lo)] + ([(f"{name}.lora-bold", lora)] if lora is not None else [])
+    for n, f in refs:
+        r = ufo.newGlyph(n)
+        _glyf_to_ufo(r, f, name)
+        r.width = f["hmtx"][name][0]
+        r.markColor = "0.6,0.6,0.6,1"
+        order.append(n)
+    ufo.glyphOrder = order
+    ufo.save(path, overwrite=True)
+    return path
+
+
+def apply_manual_glyph(M, path, name):
+    """Replace the bold `name` by the hand-edited one (same point structure as the regular)."""
+    from .geom import explicitize
+    hi = M[700]
+    glyf, hmtx = hi["glyf"], hi["hmtx"]
+    base = glyph_contours(glyf, name)
+    new, adv = load_ufo_glyph(path, name)
+    try:
+        new = _align(base, new)
+    except SystemExit:
+        _explicit_both(M, name)
+        base = glyph_contours(glyf, name)
+        try:
+            new = _align(base, [explicitize(c) for c in new])
+        except SystemExit as e:
+            raise SystemExit(f"{path}, glyph '{name}': {e}")
+    D = np.array([p[:2] for c in new for p in c]) - np.array([p[:2] for c in base for p in c])
+    set_glyph_contours(glyf, name, new)
+    hmtx[name] = (int(round(adv)), glyf[name].xMin)
+    return {"max move": round(float(np.hypot(*D.T).max()), 1), "advance": int(round(adv))}
+
+
 # ------------------------------------------------------------------ bold figures
 FIG_NAMES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 SUP_NAMES = ["uni2070", "uni00B9", "uni00B2", "uni00B3", "uni2074", "uni2075", "uni2076", "uni2077", "uni2078", "uni2079"]
