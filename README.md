@@ -106,5 +106,6 @@ glyphs moved. `uv run python tools/export_bold_figures.py --force` re-exports fr
   General Public License, version 3 or later, see `LICENSE`.
 
 Derived from [Lora](https://github.com/cyrealtype/Lora-Cyrillic) (Olga Karpushina, Alexei
-Vanyashin, Cyreal) and [Brygada 1918](https://github.com/kosmynkab/Brygada-1918) (Mateusz
-Machalski, Borys Kosmynka, Przemek Hoffer).
+Vanyashin; Cyreal) and [Brygada 1918](https://github.com/kosmynkab/Brygada-1918) (Capitalics
+Warsaw Type Foundry; Mateusz Machalski, Borys Kosmynka, Ania Wieluńska, Przemysław Hoffer), as
+listed in the `AUTHORS.txt` of each project.

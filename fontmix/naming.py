@@ -11,7 +11,8 @@ COPYRIGHT = (
 )
 DESIGNER = (
     f"{FAMILY}: derived from Lora (Olga Karpushina, Alexei Vanyashin / Cyreal) and "
-    "Brygada 1918 (Mateusz Machalski, Borys Kosmynka, Przemek Hoffer)"
+    "Brygada 1918 (Capitalics Warsaw Type Foundry; Mateusz Machalski, Borys Kosmynka, "
+    "Ania Wieluńska, Przemysław Hoffer)"
 )
 DESCRIPTION = (
     f"{FAMILY} is a text serif built on Lora's skeleton, wedge serifs, ligatures and italic, "
